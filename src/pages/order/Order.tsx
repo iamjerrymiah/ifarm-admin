@@ -7,6 +7,7 @@ import { BsSearch } from 'react-icons/bs'
 import { Table } from '../../common/Table/Table'
 import { useState } from 'react'
 import PageMainContainer from '../../common/PageMain/PageMain'
+import { useNavigate } from 'react-router'
 
 
 const dataFields = [
@@ -22,6 +23,10 @@ const dataFields = [
 ]
 
 function OrderTable({filter}:any) {
+
+    const navigate = useNavigate()
+    const viewOrder = (datum:any) => { navigate(`/main/order-management/view/${datum?.id}`) }
+
     return (
         <Box w='100%'>
             <Box overflowX="auto">
@@ -49,18 +54,14 @@ function OrderTable({filter}:any) {
 
             <Table
                 tableFields={dataFields}
-                tableData={[]}
+                tableData={[{id: 'jdudjskke2'}]}
                 emptyText={'No data found'}
                 loading={false}
                 numbered
                 options={[
                     {
                         name: 'View',
-                        onUse: (datum: any) => {  },
-                    },                    
-                    {
-                        name: 'Edit',
-                        onUse: (datum: any) => {  },
+                        onUse: (datum: any) => { viewOrder(datum) },
                     },
                     {
                         name: 'Delete',

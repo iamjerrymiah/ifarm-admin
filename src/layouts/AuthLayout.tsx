@@ -71,7 +71,7 @@ const SidebarContent = ({ isCollapsed }: { isCollapsed: boolean }) => {
                     objectFit={'contain'}
                     style={{ width: 80 }} 
                     cursor={'pointer'}
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate('/main/dashboard')}
                 />
             </Flex>
 
@@ -222,7 +222,7 @@ function AuthLayoutMain () {
                                 objectFit={'contain'}
                                 style={{ width: 80 }} 
                                 cursor={'pointer'}
-                                onClick={() => navigate('/')}
+                                onClick={() => navigate('/main/dashboard')}
                             />
                             <Box cursor={'pointer'}>
                                 {isOpen ? <ImCross onClick={onClose} /> : <IoMdMenu size={30} onClick={onOpen}/> }

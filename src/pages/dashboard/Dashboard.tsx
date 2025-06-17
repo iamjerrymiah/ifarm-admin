@@ -5,6 +5,7 @@ import DataInformation from './components/DataInformation'
 import { Table } from '../../common/Table/Table'
 import TransactionChart from '../payment/components/TransactionChart'
 import PageMainContainer from '../../common/PageMain/PageMain'
+import { useNavigate } from 'react-router'
 
 const dataFields = [  
     { name: 'Order', key: 'order', idChange: true},   
@@ -17,6 +18,10 @@ const dataFields = [
 ]
 
 export default function Dashboard() {
+
+    const navigate = useNavigate()
+    const addProduct = () => { navigate(`/main/product-management/add`) }
+
     return (
         <PageMainContainer title="Dashboard" description="Dashboard">
             <Box w={'100%'}>
@@ -28,6 +33,7 @@ export default function Dashboard() {
                         <Button 
                             text='Add Product'
                             iconType='add'
+                            onClick={addProduct}
                         />
                     </HStack>
                 </PageHeading>
