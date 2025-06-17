@@ -197,7 +197,7 @@ function AuthLayoutMain () {
                 ) : (
                     <>
                         <Drawer isOpen={isOpen} onClose={onClose} placement="left">
-                            <DrawerContent>
+                            <DrawerContent maxW={['300px','400px']} overflowY={'scroll'} className="scroll-custom">
                                 <DrawerCloseButton fontSize='lg'/>
                                 <SidebarContent isCollapsed={false} />
                             </DrawerContent>
