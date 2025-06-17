@@ -25,13 +25,14 @@ const ViewProductManagement = lazy(() => import("../pages/product/ViewProduct"))
 
 const routeConfig = [
     {
-        path: "/auth/login",
+        // path: "/auth/login",
+        path: "/",
         component: Login,
         auth: false,
         layout: DefaultLayout,
     },
     {
-        path: "/",
+        path: "/main/dashboard",
         component: Dashboard,
         auth: true,
         layout: AuthLayout,

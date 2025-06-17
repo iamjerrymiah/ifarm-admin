@@ -64,7 +64,7 @@ function App() {
         createRoutesFromElements(
             <>
                 {renderRoutesGroupedByLayout(routeConfig)}
-                <Route path="*" element={<Navigate replace to="/" />} />
+                <Route path="*" element={<Navigate replace to="/main/dashboard" />} />
             </>
         )
     );

@@ -33,7 +33,7 @@ interface sidebarLinksProps {
 }
 
 const sidebarLinks:sidebarLinksProps[] = [
-    { icon: FiHome, label: 'Dashboard', link: '/' },
+    { icon: FiHome, label: 'Dashboard', link: '/main/dashboard' },
     { icon: FiPackage, label: 'Product Management', link: '/main/product-management' },
     { icon: TbCheckbox, label: 'Order Management', link: '/main/order-management' },
     { icon: MdPayments, label: 'Payments & Revenue', link: '/main/payments' },

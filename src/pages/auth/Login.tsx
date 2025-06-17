@@ -94,7 +94,7 @@ function LoginMain () {
                             mt={6}
                             text='Sign in'
                             size={'md'}
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/main/dashboard')}
                         />
                     </Stack>
                 </Flex>
