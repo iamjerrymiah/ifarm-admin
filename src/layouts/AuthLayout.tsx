@@ -2,6 +2,7 @@ import {
     Avatar, 
     Box, 
     Drawer, 
+    DrawerCloseButton, 
     DrawerContent, 
     Flex, 
     HStack, 
@@ -197,6 +198,7 @@ function AuthLayoutMain () {
                     <>
                         <Drawer isOpen={isOpen} onClose={onClose} placement="left">
                             <DrawerContent>
+                                <DrawerCloseButton fontSize='lg'/>
                                 <SidebarContent isCollapsed={false} />
                             </DrawerContent>
                         </Drawer>
