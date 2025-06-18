@@ -3,16 +3,19 @@ import { Input } from "../../../common/Form/Input";
 import { Select } from "../../../common/Form/Select";
 import FormSection from "../../../common/Form/FormSection";
 import Switch from "../../../common/Form/Switch";
-import { CheckBox } from "../../../common/Form/CheckBox";
 import { TextArea } from "../../../common/Form/TextArea";
+import Button from "../../../common/Button/Button";
 
 
 export default function ProductForm({
     edit,
     data = {},
     errors = {},
+    onChange,
     controller,
-}: {edit?:boolean; data?:any; controller?:any; errors?:any}) {
+}: {edit?:boolean; data:any; controller:any; errors:any; onChange?:any;}) {
+
+    const numberHundredArray = Array(100).fill(1).map((n, i) => n + i)
 
     return (
         <Box w='100%'>
@@ -20,7 +23,7 @@ export default function ProductForm({
                 <Box>
                     <Input 
                         label="Product Name"
-                        name=""
+                        name="name"
                         value={data?.name}
                         onChange={controller}
                         errors={errors}
@@ -28,16 +31,24 @@ export default function ProductForm({
                     />
                     <Input 
                         label="Product SKU/ID"
-                        name=""
-                        value={data?.skuId}
+                        name="sku"
+                        value={data?.sku}
                         onChange={controller}
                         errors={errors}
                         required
                     />
                     <Input 
                         label="Short Description"
-                        name=""
-                        value={data?.shortDescription}
+                        name="short_description"
+                        value={data?.short_description}
+                        onChange={controller}
+                        errors={errors}
+                        required
+                    />
+                    <TextArea 
+                        label="Long Description"
+                        name="long_description"
+                        value={data?.long_description}
                         onChange={controller}
                         errors={errors}
                         required
@@ -54,15 +65,15 @@ export default function ProductForm({
                         onChange={controller}
                         errors={errors}
                         options={[]}
-                        required
+                        // required
                     />
                     <Input 
                         label="Tags/Keywords"
-                        name=""
-                        value={data?.tags}
+                        name="seo_keywords"
+                        value={data?.seo_keywords}
                         onChange={controller}
                         errors={errors}
-                        required
+                        // required
                     />
                 </Box>
             </FormSection>
@@ -72,7 +83,7 @@ export default function ProductForm({
                     <Input 
                         label="Price"
                         type='money'
-                        name=""
+                        name="price"
                         value={data?.price}
                         onChange={controller}
                         errors={errors}
@@ -80,36 +91,30 @@ export default function ProductForm({
                     />
                     <Select 
                         label="Discount Options"
-                        name=""
+                        name="discount"
                         value={data?.discount}
                         onChange={controller}
                         errors={errors}
-                        options={[]}
+                        options={numberHundredArray}
                         required
                     />
                     <Input 
                         label="Stock Quantity"
-                        name=""
-                        value={data?.stockQuantity}
+                        name="quantity"
+                        value={data?.quantity}
                         onChange={controller}
                         errors={errors}
                         required
                     />
                     <Select 
                         label="Unit of Measure"
-                        name=""
-                        value={data?.tags}
+                        name="unit_of_measure"
+                        value={data?.unit_of_measure}
                         onChange={controller}
                         errors={errors}
-                        options={[]}
+                        options={["kg"]}
                         required
                     />
-                </Box>
-            </FormSection>
-
-            <FormSection title="Media & Assets">
-                <Box>
-
                 </Box>
             </FormSection>
 
@@ -117,16 +122,15 @@ export default function ProductForm({
                 <Box>
                     <Input 
                         label="Custom Attributes"
-                        name=""
-                        value={data?.attribute}
+                        name="custom_attributes"
+                        value={data?.custom_attributes}
                         onChange={controller}
                         errors={errors}
-                        required
                     />
                     <Input 
                         label="Specifications Table"
-                        name=""
-                        value={data?.spec}
+                        name="specifications"
+                        value={data?.specifications}
                         onChange={controller}
                         errors={errors}
                         placeholder="(Optional) Additional detailed specifications (e.g., weight, dimensions)"
@@ -143,47 +147,54 @@ export default function ProductForm({
                         value={data?.status}
                         onChange={controller}
                     />
+                    <Switch 
+                        rightLabel="Featured Product"
+                        subLabel="Checkbox to mark as “Featured” on the storefront."
+                        name="is_featured"
+                        value={data?.is_featured}
+                        onChange={controller}
+                    />
                     <Input 
                         label="Publication Date"
                         type="date"
-                        name=""
-                        value={data?.date}
+                        name="publication_date"
+                        value={data?.publication_date}
                         onChange={controller}
                         errors={errors}
-                        required
-                    />
-                    <CheckBox 
-                        label="Featured Product"
-                        subLabel="Checkbox to mark as “Featured” on the storefront."
-                        name="featured"
-                        value={data?.featured}
-                        onChange={controller}
+                        // required
                     />
                     <Input 
                         label="SEO Title"
-                        name=""
-                        value={data?.seo}
+                        name="seo_title"
+                        value={data?.seo_title}
                         onChange={controller}
                         errors={errors}
-                        required
+                        // required
                     />
                     <TextArea 
                         label="Meta Description"
-                        name="metaDescription"
-                        value={data?.metaDescription}
+                        name="seo_description"
+                        value={data?.seo_description}
                         onChange={controller}
                         errors={errors}
-                        required
+                        // required
                     />
                     <Input 
                         label="URL Slug"
-                        name=""
-                        value={data?.url}
+                        name="url_slug"
+                        value={data?.url_slug}
                         onChange={controller}
                         errors={errors}
-                        required
+                        // required
+                        leftElement={(<Button text="http://" px={6} borderRadius={'0px'} color={'#667085'} variant={'ghost'}/>)}
                     />
                 </Stack>
+            </FormSection>
+
+            <FormSection title="Media & Assets">
+                <Box>
+
+                </Box>
             </FormSection>
 
             

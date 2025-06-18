@@ -7,12 +7,12 @@ export function useCustomFormState(handleSubmit: Function, initialState: any, ex
     const [ formState, setFormStatus ] = useState({ pending: false, success: undefined} as {pending: boolean, success?: undefined | boolean, errors?: any, message?: string, response?: any});
     const [data, setData] = useState({...initialState} as any);
 
-    const onChange = (name: string, value: any, type: string = '', caps = true) => {
+    const onChange = (name: string, value: any, type: string = '', capCased = true) => {
 
         let errorObj: any = Object.assign({}, formState.errors);
         delete errorObj[name] ;
         setFormStatus((prevState) => {return {...prevState, errors: {...errorObj}, success: undefined}})
-        formAltController(name, value, type, setData, caps);
+        formAltController(name, value, type, setData, capCased);
     }
 
     const setFormData = (initData?: any, error?: {errors: {}, message: string}) => {

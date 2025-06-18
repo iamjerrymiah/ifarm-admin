@@ -1,5 +1,5 @@
 import { Box, Flex, HStack } from '@chakra-ui/react';
-import { mockProductData } from '../../constants/constants';
+// import { mockProductData } from '../../constants/constants';
 import PageHeading from '../../common/PageHeader/PageHeading';
 import Tabs from '../../common/Tabs/Tabs';
 import Button from '../../common/Button/Button';
@@ -9,27 +9,42 @@ import { BsSearch } from 'react-icons/bs';
 import { Table } from '../../common/Table/Table';
 import { useNavigate } from 'react-router';
 import PageMainContainer from '../../common/PageMain/PageMain';
+import { useGetProducts } from '../../service/product/productHook';
+import Pagination from '../../common/Pagination/Pagination';
 
 const dataFields = [
     { name: 'Product Name', key: 'name', img: 'img', withImg: true },    
     { name: 'Product ID', key: 'id', idChange: true},    
+    { name: 'Product SKU/ID', key: 'sku' },
+    { name: 'Stock', key: 'quantity', numShortForm: true},
     { name: 'Category', key: 'category'},
     { name: 'Price', key: 'price', money: true },
-    { name: 'Stock', key: 'stock', case: true },
-    { name: 'Last Updated', key: 'date', date: true }, 
+    { name: 'Last Updated', key: 'updated_at', date: true }, 
     { name: 'Status', key: 'status'},
 ]
 
-const ProductTable = ({filter}:any) => {
+const ProductTable = ({
+    filter,
+    filterCatgory = '',
+    products = [],
+    setFilter,
+    isLoading,
+    currentPage,
+    totalPages
+}:any) => {
 
     const navigate = useNavigate()
 
-    const editProduct = (datum:any) => { navigate(`/main/product-management/edit/${'jkiiw8ye683394'}`) }
-    const viewProduct = (datum:any) => { navigate(`/main/product-management/view/${'lsfivslkdeurh9'}`) }
+    const changePage = ({ selected = 0 }) => {
+        setFilter({ ...filter, page: selected + 1 });
+    }
+
+    const editProduct = (datum:any) => { navigate(`/main/product-management/edit/${datum?.id}`) }
+    const viewProduct = (datum:any) => { navigate(`/main/product-management/view/${datum?.id}`) }
 
     return (
         <Box w='100%'>
-            <Box overflowX="auto">
+            <Box overflowX="auto" className='scroll-custom'>
                 <Flex direction={{ base: "row", md: "row" }} gap={4} mb={4}>
                     <Flex flex="1" gap={2}>
                         <Input 
@@ -54,9 +69,9 @@ const ProductTable = ({filter}:any) => {
 
             <Table
                 tableFields={dataFields}
-                tableData={mockProductData}
+                tableData={products}
                 emptyText={'No data found'}
-                loading={false}
+                loading={isLoading}
                 numbered
                 options={[
                     {
@@ -75,6 +90,12 @@ const ProductTable = ({filter}:any) => {
                 ]}
             />
 
+            <Pagination
+                onPageChange={changePage}
+                currentPage={currentPage}
+                pageCount={totalPages}
+            />
+
         </Box>
     );
 };
@@ -84,6 +105,10 @@ export default function Product() {
 
     const navigate = useNavigate()
     const [filter, setFilter] = useState<any>({})
+
+    const { data: initData = {}, isLoading } = useGetProducts(filter)
+    const { data: productData = {} } = initData
+    const products:any[] = productData?.data
 
     const addProduct = () => { navigate(`/main/product-management/add`) }
 
@@ -109,8 +134,17 @@ export default function Product() {
                 <Tabs 
                     headings={["All Product", "Vegetables", "Poultry", "Fish", "Meat"]}
                     panels={[
-                        (<ProductTable filter={filter}/>),
-                        (<ProductTable filter={filter}/>),
+                        (
+                            <ProductTable
+                                filter={filter}
+                                setFilter={setFilter}
+                                products={products ?? []}
+                                isLoading={isLoading}
+                                currentPage={productData?.current_page}
+                                totalPages={productData?.total}
+                            />
+                        ),
+                        (<></>),
                         <></>,
                         <></>,
                         <></>,

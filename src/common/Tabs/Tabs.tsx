@@ -61,7 +61,7 @@ function Tabs({
                             color={'#667085'}
                             _selected={{ fontWeight: 500, color: textColor ? textColor :  ElementColor.primary, borderBottom: bb ?? `3px solid ${ElementColor.primary}`, }}
                             onClick={(e:any) => onClickTab && onClickTab(e?.target?.innerText)}
-                            minW={minW ?? ['50%', '80px']}
+                            minW={minW ?? ['50%', '100px']}
                         >
                             {head}
                         </Tab>

@@ -7,6 +7,7 @@ import { Input } from "../../common/Form/Input";
 import { BsSearch } from "react-icons/bs";
 import { Table } from "../../common/Table/Table";
 import PageMainContainer from "../../common/PageMain/PageMain";
+import { useNavigate } from "react-router";
 
 const supportFields = [
     { name: 'Name', key: 'name', img: 'img', withImg: true },    
@@ -138,7 +139,9 @@ function FeedbackTable ({filter}:any) {
 
 export default function Customer() {
 
+    const navigate = useNavigate()
     const [filter, setFilter] = useState<any>({})
+    const createTicket = () => { navigate(`/main/customer-support/ticket/create`) }
 
     return (
         <PageMainContainer title="Customer Support & Feedback" description="Customer Support & Feedback">
@@ -153,6 +156,7 @@ export default function Customer() {
                         />
                         <Button 
                             text='Create New Ticket'
+                            onClick={createTicket}
                         />
                     </HStack>
                 </PageHeading>

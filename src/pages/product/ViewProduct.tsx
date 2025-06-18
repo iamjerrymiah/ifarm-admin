@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router";
 import PageHeading from "../../common/PageHeader/PageHeading";
 import Button from "../../common/Button/Button";
@@ -11,6 +11,8 @@ import CustomerReviews from "./components/CustomerReviews";
 import Descriptions from "./components/Descriptions";
 import CustomerFeedback from "./components/CustomerFeedback";
 import PageMainContainer from "../../common/PageMain/PageMain";
+import { useGetProduct } from "../../service/product/productHook";
+import TransparentLoader from "../../common/Loader/TransparentLoader";
 
 const mockData = {
     name: "Tomatoes",
@@ -36,23 +38,28 @@ const dataFields = [
 
 export default function ViewProduct() {
 
-    const { id } = useParams<{ id: string; }>();
     const navigate = useNavigate()
+    const { id } = useParams<{ id: string; }>();
 
-    const editProduct = () => { navigate(`/main/product-management/edit/${'jkiiw8ye683394'}`) }
+    const { data: productData = {}, isLoading } = useGetProduct(id)
+    const product = productData?.data
+
+    const editProduct = () => { navigate(`/main/product-management/edit/${id}`) }
 
     const mainImage = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg'; // Sample image
     const thumbnails = [mainImage, mainImage, mainImage, mainImage, mainImage, mainImage, mainImage];
 
-    
+    if(isLoading) {return(<TransparentLoader />)}
+
     return (
         <PageMainContainer title="Production Management" description="Production Management">
             <Box w='100%' pb={10}>
                 <PageHeading titleSize="20px" title="View Product" subHeading="Update product details here.">
                     <Button 
-                        text='Cancel'
-                        variant='outline'
-                        color={'#0E2354'}
+                        text='Back'
+                        iconType="back"
+                        bgColor={'gray'}
+                        onClick={() => navigate(-1)}
                     />
                     <Button 
                         text='Delete'

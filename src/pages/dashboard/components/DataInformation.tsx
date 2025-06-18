@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, IconButton, Text, VStack, Icon as ChakraIcon } from "@chakra-ui/react"
+import { Box, Flex, HStack, IconButton, Text, VStack, Icon as ChakraIcon, Skeleton } from "@chakra-ui/react"
 import { ReactNode } from "react"
 import { IconType } from "react-icons"
 import { CardSection } from "../../../common/Card/CardSection"
@@ -12,8 +12,9 @@ export default function DataInformation({
     title,
     value,
     dataValue,
+    isLoading,
     vsColor = "#027A48"
-}:{value: any, title: string, dataValue?: any[], vs?: string, vsColor?:string}){
+}:{value: any, title: string, dataValue?: any[], vs?: string, vsColor?:string, isLoading?:boolean}){
 
   // Dummy chart data for illustration
     const data = {
@@ -44,34 +45,38 @@ export default function DataInformation({
 
     return(
         <CardSection showHeader={false} containerProps={{ border: `1px solid ${"#E4E7EC"}` }}>
+            {isLoading ? 
+                <Box w='full' borderRadius='md'>
+                    <Skeleton borderRadius='md' h='10px' mb={2} />
+                    <Skeleton borderRadius='md' h='10px' mb={2}/>
+                    <Skeleton borderRadius='md' h='10px' mb={2}/>
+                </Box> :
+                <>
+                    <Flex justify="space-between" align="center" mb={4}>
+                        <Text fontSize={'15px'} fontWeight={500} color="#101828">{title}</Text>
+                        {/* <IconButton
+                            icon={<FiMoreVertical />}
+                            size="sm"
+                            variant="ghost"
+                            aria-label="Options"
+                        /> */}
+                    </Flex>
 
-            <Flex justify="space-between" align="center" mb={4}>
-                <Text fontSize={'15px'} fontWeight={500} color="#101828">{title}</Text>
-                {/* <IconButton
-                    icon={<FiMoreVertical />}
-                    size="sm"
-                    variant="ghost"
-                    aria-label="Options"
-                /> */}
-            </Flex>
+                    <Text color={'#101828'} fontSize="3xl" fontWeight="bold">{value}</Text>
 
-            <Text color={'#101828'} fontSize="3xl" fontWeight="bold">{value}</Text>
+                    <HStack mt={2} justify={'space-between'}>
+                        <HStack spacing={'-2'}>
+                            <ChakraIcon as={vsColor !== "#027A48" ? FiArrowDown : FiArrowUp } color={vsColor ?? "#027A48"} />
+                            <Text fontSize="sm" color={vsColor ?? "#027A48"} fontWeight="semibold">40%</Text>
+                        </HStack>
+                        <Text fontSize="sm" color="#475467">vs last month</Text>
+                    </HStack>
 
-            <HStack mt={2} justify={'space-between'}>
-                <HStack spacing={'-2'}>
-                    <ChakraIcon as={vsColor !== "#027A48" ? FiArrowDown : FiArrowUp } color={vsColor ?? "#027A48"} />
-                    <Text fontSize="sm" color={vsColor ?? "#027A48"} fontWeight="semibold">40%</Text>
-                </HStack>
-                <Text fontSize="sm" color="#475467">vs last month</Text>
-            </HStack>
-
-            <HStack
-                w={'40%'} 
-                h={'30px'} 
-                mt={2}
-            >
-                <Line data={data} options={options} />
-            </HStack>
+                    <HStack w={'40%'} h={'30px'} mt={2} >
+                        <Line data={data} options={options} />
+                    </HStack>
+                </>
+            }
 
         </CardSection>
     )

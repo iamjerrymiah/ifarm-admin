@@ -11,7 +11,7 @@ import {
     Text, 
     Tooltip, 
     useBreakpointValue, useDisclosure, VStack } from "@chakra-ui/react"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from 'react-router-dom';
 import { FiPackage, FiHome, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
@@ -25,6 +25,11 @@ import logo from '../assets/icon/logo.png'
 import { Input } from "../common/Form/Input";
 import { BsSearch } from "react-icons/bs";
 import { Container } from "../styling/layout";
+import { useGetAuthState, useGetAuthUser, useLogout } from "../service/auth/authHook";
+import Loader from "../common/Loader/Loader";
+import Notify from "../utils/notify";
+import { useConfirmAction } from "../hooks/useActions";
+import ConfirmModal from "../common/Modal/ConfirmModal";
 
 interface sidebarLinksProps {
     label: string;
@@ -34,7 +39,7 @@ interface sidebarLinksProps {
 }
 
 const sidebarLinks:sidebarLinksProps[] = [
-    { icon: FiHome, label: 'Dashboard', link: '/main/dashboard' },
+    { icon: FiHome, label: 'Dashboard', link: '/' },
     { icon: FiPackage, label: 'Product Management', link: '/main/product-management' },
     { icon: TbCheckbox, label: 'Order Management', link: '/main/order-management' },
     { icon: MdPayments, label: 'Payments & Revenue', link: '/main/payments' },
@@ -50,11 +55,29 @@ const sidebarLinks:sidebarLinksProps[] = [
 ];
 
 
-const SidebarContent = ({ isCollapsed }: { isCollapsed: boolean }) => {
+const SidebarContent = ({ isCollapsed, onClose }: { isCollapsed: boolean; onClose?: any }) => {
 
     const navigate = useNavigate()
     const [data, setData] = useState<any>({})
     const [dropdown, setDropdown] = useState(false)
+    const { openConfirm, closeConfirm, isOpenConfirm } = useConfirmAction()
+
+    const shouldLogout = (data: any) => {
+        openConfirm(data)
+    }
+
+    const { mutateAsync } = useLogout()
+    const handleLogout = async (data:any) => {
+        try {
+            const payload: any = await mutateAsync(data);
+            navigate('/auth/login')
+            return payload;
+        } catch (e:any) {
+            Notify.error("Logged Out!")
+            navigate('/auth/login')
+            return e
+        }
+    };
 
     return (
     <VStack align="stretch" spacing={4} p={4} height="100%" justify="space-between">
@@ -71,7 +94,7 @@ const SidebarContent = ({ isCollapsed }: { isCollapsed: boolean }) => {
                     objectFit={'contain'}
                     style={{ width: 80 }} 
                     cursor={'pointer'}
-                    onClick={() => navigate('/main/dashboard')}
+                    onClick={() => navigate('/')}
                 />
             </Flex>
 
@@ -94,7 +117,14 @@ const SidebarContent = ({ isCollapsed }: { isCollapsed: boolean }) => {
                             borderRadius="md"
                             _hover={{ color: "#03723D", fontWeight: 700, fontSize: '18px' }}
                             color={'#344054'}
-                            onClick={!link?.children ? () => navigate(link?.link) : ()=> setDropdown(!dropdown) }
+                            onClick={() => {
+                                if (!link?.children) {
+                                    navigate(link?.link);
+                                    if (onClose) onClose();
+                                } else {
+                                    setDropdown((prev) => !prev);
+                                }
+                            }}
                         >
                             {isCollapsed ? <Tooltip label={link?.label}><Icon as={link.icon} fontSize="2xl" /></Tooltip> : <Icon as={link.icon} fontSize="2xl" />}
                             {!isCollapsed && (<Text fontSize={'14px'} ml={3}>{link.label}</Text>)}
@@ -118,7 +148,10 @@ const SidebarContent = ({ isCollapsed }: { isCollapsed: boolean }) => {
                                 cursor={'pointer'}
                                 borderRadius={'6px'}
                                 _hover={{ bgColor: '#F9FAFB' }}
-                                onClick={() => navigate(child?.link)}
+                                onClick={() => { 
+                                    navigate(child?.link);
+                                    if (onClose) onClose();
+                                }}
                             >
                                 <Text fontSize="11px" fontWeight={500} color={'#344054'} key={i}>
                                     {child?.label}
@@ -143,8 +176,24 @@ const SidebarContent = ({ isCollapsed }: { isCollapsed: boolean }) => {
                     </Box>
                 )}
             </Flex>
-            {!isCollapsed && <Box><MdLogout size={30}/></Box>}
+            {!isCollapsed && 
+                <Box>
+                    <MdLogout 
+                        size={30} 
+                        color="crimson" 
+                        cursor={'pointer'}
+                        onClick={() => shouldLogout({})}
+                    />
+                </Box>
+            }
         </HStack>
+
+        <ConfirmModal
+            isOpen={isOpenConfirm}
+            onConfirm={handleLogout}
+            onClose={closeConfirm}
+            message={"Are you sure you want to log out?"}
+        />
 
     </VStack>
 )};
@@ -199,7 +248,7 @@ function AuthLayoutMain () {
                         <Drawer isOpen={isOpen} onClose={onClose} placement="left">
                             <DrawerContent maxW={['300px','400px']} overflowY={'scroll'} className="scroll-custom">
                                 <DrawerCloseButton fontSize='lg'/>
-                                <SidebarContent isCollapsed={false} />
+                                <SidebarContent isCollapsed={false} onClose={onClose}/>
                             </DrawerContent>
                         </Drawer>
                     </>
@@ -222,7 +271,7 @@ function AuthLayoutMain () {
                                 objectFit={'contain'}
                                 style={{ width: 80 }} 
                                 cursor={'pointer'}
-                                onClick={() => navigate('/main/dashboard')}
+                                onClick={() => navigate('/')}
                             />
                             <Box cursor={'pointer'}>
                                 {isOpen ? <ImCross onClick={onClose} /> : <IoMdMenu size={30} onClick={onOpen}/> }
@@ -245,11 +294,18 @@ function AuthLayoutMain () {
 //set all global authenication configuration here
 export default function AuthLayout() {
 
-    // useEffect(() => { if (!isAuthenticated) {navigate("/auth/login");} }, [isAuthenticated]);
+    const navigate = useNavigate()
+
+    const { isAuthenticated, isLoading, user } =  useGetAuthState();
+    const { } = useGetAuthUser(!isAuthenticated && !user);
+    // const { } = useGetAuthUser(true);
+
+    useEffect(() => { if (!isLoading && isAuthenticated === false) {navigate("/auth/login"); Notify.error('Unauthenticated! Please log in.'); } }, [isLoading, isAuthenticated]);
+
+    if(isLoading) {return(<Loader />)}
 
     return (
         <Box w='100%'>
-            {/* {isAuthenticated ? <AuthLayoutMain /> : <Navigate to="/auth/login" replace />} */}
             <AuthLayoutMain />
         </Box>
     )

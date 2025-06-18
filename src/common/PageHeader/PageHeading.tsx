@@ -38,7 +38,7 @@ function PageHeading({ title, subHeading, titleSize, fontSize, children, color, 
                 node ? <Box mt='2'>{node}</Box> :
                 <Stack>
                     <Text color={color ?? TextColor.heading} fontSize={titleSize ?? '24px'} fontWeight={500} lineHeight={2}>{title}</Text>
-                    <Text mt={'-4'} color={'#475467'} fontWeight={400} fontSize={['13px', '14px']}>{subHeading}</Text>
+                    <Text mt={'-4'} color={'#475467'} fontWeight={400} fontSize={['12px', '14px']}>{subHeading}</Text>
                 </Stack>
             }
             {children &&

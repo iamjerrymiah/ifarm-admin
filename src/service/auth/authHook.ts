@@ -23,23 +23,21 @@ export const useLogin = () => {
             queryClient.setQueryData<any>([key], (prevAuth: any) => prevAuth ? {...prevAuth, isLoading: true} : { isLoading: true});
 
             return customMutationRequest(`/auth/login`, 'POST', credentials).then((res:any) => {
-                localStorage.setItem('ifarm_admin_id', res?.data?.id);
+                localStorage.setItem('ifarm_admin_id', res?.data?.data?.id);
                 localStorage.setItem(storeToken, res?.data?.token);
                 [SECHTTP].forEach(instance => {
                     instance.defaults.headers.common['Authorization'] = `Bearer ${res?.data?.token}`;
                 });
-                console.log('login', res)
                 return res;
             })
         },
         onSuccess: (data) => {
-            console.log('log-succ', data)
             const auth: AuthState = {
                 isAuthenticated: true,
                 authToken: data?.data?.token,
-                ifarm_admin_id: data?.data?.id,
+                ifarm_admin_id: data?.data?.data?.id,
                 authState: AuthStateEnum.Authenticated,
-                user: {...data?.data, fullName: `${data?.data?.firstName} ${data?.data?.lastName}`},
+                user: {...data?.data?.data},
                 isLoading: false,
                 networkFailure: false,
             };
@@ -93,19 +91,14 @@ export const useGetAuthState = () => {
 export const useGetAuthUser = (execute: boolean = false) => {
     const queryClient = useQueryClient();
     return useQuery<any, Error>({
-        queryKey: [`${key}`],
+        queryKey: [`${key}-user`],
         queryFn: async () => {
             queryClient.setQueryData<any>([key], (prevAuth: any) => prevAuth ? {...prevAuth, isLoading: true} : { isLoading: true});
-            const res: any = await fetcher('/user');
-            const user: any = {
-                ...res,
-                fullName: `${res?.data?.firstName} ${res?.data?.lastName}`
-            };
-
-            console.log('get-auth', res)
+            const res: any = await fetcher('/profile');
+            const user: any = {...res};
 
             // Update the auth state with the new user data
-            queryClient.setQueryData([`${key}`], user?.data);
+            queryClient.setQueryData([`${key}-user`], user?.data);
 
             // Update the main auth state
             queryClient.setQueryData<any>([key], (oldData:any) => ({
@@ -114,7 +107,7 @@ export const useGetAuthUser = (execute: boolean = false) => {
                 authToken: localStorage.getItem(storeToken),
                 isAuthenticated: true,
                 authState: AuthStateEnum.Authenticated,
-                ifarm_admin_id: user?.id,
+                ifarm_admin_id: user?.data?.id,
                 isLoading: false,
             }));
 

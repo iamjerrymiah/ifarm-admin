@@ -17,6 +17,14 @@ export function capCase(text: string = '', splitter: string = ' ') {
     return newStr.map(e => `${allCaps(e[0])}${allLower(e.slice(1))}`).join(' ')
 }
 
+export function isObjectPropsEmpty (obj:any = {}) {
+    const keys = Object.keys(obj)
+    if (keys.length > 0) {
+        return keys.every(k => obj[k] == '' || !obj[k])
+    }
+    return true
+}
+
 export const moneyFormat = (amount: string | number, integer?: boolean) => {
     if (amount === 'NIL') {
         return amount
@@ -26,11 +34,11 @@ export const moneyFormat = (amount: string | number, integer?: boolean) => {
     }
 }
 
-export const formatNumberToShortForm = (number:number|any) => {
+export const formatNumberToShortForm = (number:number|any, toFixed:number = 0) => {
     if (number >= 1_000_000_000_000) {
-        return `${(number / 1_000_000_000_000).toFixed(0)}T`; // Trillions
+        return `${(number / 1_000_000_000_000).toFixed(toFixed)}T`; // Trillions
     } else if (number >= 1_000_000_000) {
-        return `${(number / 1_000_000_000).toFixed(0)}B`; // Billions
+        return `${(number / 1_000_000_000).toFixed(toFixed)}B`; // Billions
     } else if (number >= 1_000_000) {
         return `${(number / 1_000_000).toFixed(1)}M`; // Millions
     } else if (number >= 1_000) {
@@ -73,7 +81,7 @@ export const parseResError = ( err: any ) => {
 }
 
 
-export function formAltController(name: string, value: any, type: string, setData: Function, caps = true) {
+export function formAltController(name: string, value: any, type: string, setData: Function, capCased = true) {
 
     switch (type) {
         case 'number':
@@ -83,7 +91,6 @@ export function formAltController(name: string, value: any, type: string, setDat
             setData((prev: any) => ({ ...prev, [name]: value }));
             break;
         case 'checkbox':
-            // setData((prev: any) => ({ ...prev, [name]: !prev[name] }));
             setData((prev:any) => {
                 if (!prev) {
                   return { [name]: false };
@@ -109,6 +116,6 @@ export function formAltController(name: string, value: any, type: string, setDat
             setData((prev: any) => ({ ...prev, [name]: value }));
             break;
         default:
-            setData((prev: any) => ({ ...prev, [name]: caps ? allCaps(value) : value }));
+            setData((prev: any) => ({ ...prev, [name]: capCased ? capCase(value) : value }));
     }
 }

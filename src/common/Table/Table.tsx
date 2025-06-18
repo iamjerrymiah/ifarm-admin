@@ -13,6 +13,7 @@ import {
     BoxProps, 
     Text,
     Flex,
+    Box,
 } from '@chakra-ui/react'
 import { IconType } from 'react-icons'
 import { useTableRowFormat } from '../../hooks/useTable';
@@ -23,6 +24,7 @@ import EmptyListHero from '../Hero/EmptyListHero';
 import MenuDropdown from '../Menu/MenuDropdown';
 
 import { GoDotFill } from "react-icons/go";
+import { TextColor } from '../../constants/colors';
 
 
 
@@ -83,7 +85,7 @@ export function Table({
                     <Tr>
                         {numbered && 
                             <Th>
-                                {/* <Text color={'#42526D'} fontWeight={500}>S/N</Text> */}
+                                <Text color={'#42526D'} fontWeight={500}>S/N</Text>
                                 {/* <input type="checkbox" /> */}
                             </Th>
                         }
@@ -165,8 +167,8 @@ export function TableRow({
         >
             {numbered &&
                 <Td py={2}>
-                    {/* <Text color={TextColor.heading}>{index + 1 + (currentPage * perPage) - perPage}</Text> */}
-                    <input type="checkbox" />
+                    <Text color={TextColor.label}>{index + 1 + (currentPage * perPage) - perPage}</Text>
+                    {/* <input type="checkbox" /> */}
                 </Td>
             }
             {formatted.map((datum, ind) => (
@@ -189,7 +191,7 @@ export function TableRow({
                         </Tag>
                     ) : (
                         <HStack w='max-content'>
-                            <Text fontSize={'13px'} fontWeight={500} color={'#42526D'}>{datum}</Text>
+                            <Box fontSize={'13px'} fontWeight={500} color={'#42526D'}>{datum}</Box>
                         </HStack>
                     )}
                 </Td>

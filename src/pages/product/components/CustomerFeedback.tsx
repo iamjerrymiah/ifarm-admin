@@ -2,8 +2,9 @@ import { Avatar, Box, Flex, HStack, Text } from "@chakra-ui/react"
 import Rating from "../../../common/Form/Rating"
 import Button from "../../../common/Button/Button";
 
-export function WithAvatar ({datum, img, rating, align, avatarSize}:{
+export function WithAvatar ({datum, img, sub, rating, align, avatarSize}:{
     datum:any;
+    sub?: string;
     img?:any;
     rating?:number;
     align?:string;
@@ -14,6 +15,7 @@ export function WithAvatar ({datum, img, rating, align, avatarSize}:{
             <Avatar src={img} name={datum} size={avatarSize ?? "md"} />
                 <Box ml={2}>
                     <Text fontWeight={500} color='#101828'>{datum}</Text>
+                    {sub && <Text color={'#475467'} fontSize={'11px'}>{sub}</Text>}
                     {rating && <Rating rating={rating}/> }
                 </Box>
         </Flex>

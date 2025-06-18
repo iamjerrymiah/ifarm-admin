@@ -6,10 +6,10 @@ const Login = lazy(() => import("../pages/auth/Login"));
 const Payment = lazy(() => import("../pages/payment/Payment"));
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
 
-const Customers = lazy(() => import("../pages/user/Customer"));
-const CreateTicket = lazy(() => import("../pages/user/CreateTicket"));
-const ViewTicket = lazy(() => import("../pages/user/ViewTicket"));
-const ViewFeedback = lazy(() => import("../pages/user/ViewFeedback"));
+const Customers = lazy(() => import("../pages/customer/Customer"));
+const CreateTicket = lazy(() => import("../pages/customer/CreateTicket"));
+const ViewTicket = lazy(() => import("../pages/customer/ViewTicket"));
+const ViewFeedback = lazy(() => import("../pages/customer/ViewFeedback"));
 
 const UserManagement = lazy(() => import("../pages/user/User"));
 const AddUserManagement = lazy(() => import("../pages/user/AddUser"));
@@ -25,14 +25,13 @@ const ViewProductManagement = lazy(() => import("../pages/product/ViewProduct"))
 
 const routeConfig = [
     {
-        // path: "/auth/login",
-        path: "/",
+        path: "/auth/login",
         component: Login,
         auth: false,
         layout: DefaultLayout,
     },
     {
-        path: "/main/dashboard",
+        path: "/",
         component: Dashboard,
         auth: true,
         layout: AuthLayout,

@@ -1,5 +1,5 @@
 import { idChange, withImg } from "../common/Table/TableChanger"
-import { allCaps, allLower, capCase, moneyFormat, prettyDateFormat } from "../utils/utils"
+import { allCaps, allLower, capCase, formatNumberToShortForm, moneyFormat, prettyDateFormat } from "../utils/utils"
 
 
 export function useTableRowFormat() {
@@ -42,6 +42,7 @@ export function useTableRowFormat() {
                 e?.boolean ? (Boolean(rowData[e.key]) ? 'Yes' : 'No') :
                 e?.state ? rowData[e.key] :
                 e?.case ? capCase(rowData[e.key]) :
+                e?.numShortForm ? formatNumberToShortForm(rowData[e.key], 3) :
                 e?.idChange ? idChange(rowData[e.key]) :
                 e?.withImg ? withImg(rowData[e.key], rowData[e.img]) :
                 e?.lower ? allLower(rowData[e.key]) :
