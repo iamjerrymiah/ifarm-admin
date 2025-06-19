@@ -2,8 +2,9 @@ import { Box, Flex, Grid, GridItem, HStack, Image, Stack, Tag, Text } from "@cha
 import { MdOutlineCalendarToday, MdOutlineCheck } from "react-icons/md"
 import { WithAvatar } from "../../product/components/CustomerFeedback"
 
-export default function OrderGrid (){
+export default function OrderGrid ({data}:any){
     const imag = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg'
+    
     return (
         <Grid
             gap={[8,8,8,4]}

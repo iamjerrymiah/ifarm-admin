@@ -8,19 +8,36 @@ import { BsSearch } from 'react-icons/bs'
 import { Table } from '../../common/Table/Table'
 import PageMainContainer from '../../common/PageMain/PageMain'
 import { useNavigate } from 'react-router'
+import { useGetUsers } from '../../service/user/userHook'
+import Pagination from '../../common/Pagination/Pagination'
 
 const dataFields = [
     { name: 'Name', key: 'name', img: 'img', withImg: true },    
-    { name: 'User ID', key: 'id', idChange: true},    
-    { name: 'User Type', key: 'type', case: true},
-    { name: 'Registration Date', key: 'date', date: true }, 
+    { name: 'User ID', key: 'id', idChange: true},
+    { name: "Username", key: "username", case: true },    
+    { name: 'Email', key: 'email', lower: true},
+    { name: "Phone", key: 'phone' },
+    { name: "Role", key: 'role', case: true },
+    { name: 'Creation Date', key: 'created_at', date: true }, 
     { name: 'Status', key: 'status'},
 ]
 
-function UserTable ({filter}:any) {
+function UserTable ({
+    users = [],
+    filter,
+    setFilter,
+    isLoading,
+    currentPage,
+    totalPages,
+}:any) {
 
     const navigate = useNavigate()
-    const editUser = (datum:any) => { navigate(`/main/user-management/edit/${'jfjjozdkkfr53'}`) }
+
+    const changePage = ({ selected = 0 }) => {
+        setFilter({ ...filter, page: selected + 1 });
+    }
+
+    const editUser = (datum:any) => { navigate(`/main/user-management/edit/${datum?.id}`) }
 
     return (
         <Box w='100%'>
@@ -49,9 +66,9 @@ function UserTable ({filter}:any) {
 
             <Table
                 tableFields={dataFields}
-                tableData={[]}
+                tableData={users}
                 emptyText={'No data found'}
-                loading={false}
+                loading={isLoading}
                 numbered
                 options={[                  
                     {
@@ -66,6 +83,12 @@ function UserTable ({filter}:any) {
                 ]}
             />
 
+            <Pagination
+                onPageChange={changePage}
+                currentPage={currentPage}
+                pageCount={totalPages}
+            />
+
         </Box>
     )
 }
@@ -74,6 +97,11 @@ export default function User() {
 
     const navigate = useNavigate()
     const [filter, setFilter] = useState<any>({})
+
+    const { data: initData = {}, isLoading } = useGetUsers(filter)
+    const { data: userData = {} } = initData
+    const users:any[] = userData?.data
+
     const addUser = () => { navigate(`/main/user-management/add`) }
 
     return (
@@ -98,7 +126,14 @@ export default function User() {
                 <Tabs 
                     headings={["All User", "Customer", "Administrator"]}
                     panels={[
-                        <UserTable filter={filter} />,
+                        <UserTable 
+                            users={users}
+                            filter={filter} 
+                            setFilter={setFilter}
+                            isLoading={isLoading}
+                            currentPage={userData?.current_page}
+                            totalPages={userData?.total}
+                        />,
                         <></>,
                         <></>,
                     ]}

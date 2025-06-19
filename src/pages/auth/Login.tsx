@@ -1,6 +1,5 @@
 import { 
     Box, 
-    // Checkbox, 
     Flex, 
     Heading, 
     Image, 
@@ -64,14 +63,6 @@ function LoginMain () {
             return e
         }
     }
-
-    // const { data, onChange, formState, formAction } = useCustomFormState(handleSubmit, {})
-    // const errors = formState.errors
-
-    // const controller: any = (e: any) => {
-    //     const { name, value, type } = e.target;
-    //     onChange(name, value, type)
-    // }
 
     return (
         <Flex h="100vh" direction={{ base: 'column', md: 'row' }}>

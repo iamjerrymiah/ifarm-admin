@@ -85,7 +85,7 @@ export function Table({
                     <Tr>
                         {numbered && 
                             <Th>
-                                <Text color={'#42526D'} fontWeight={500}>S/N</Text>
+                                <Text color={'#42526D'} fontSize={'12px'} fontWeight={500}>S/N</Text>
                                 {/* <input type="checkbox" /> */}
                             </Th>
                         }
@@ -161,13 +161,12 @@ export function TableRow({
     return (
         <Tr
             onClick={e => { onClick ? onClick(rowData) : stopPropagation(e); }}
-            // bgColor={index % 2 === 0 ? ElementColor.lighterShadow : ''}
             cursor={onClick ? 'pointer' : ''}
             _hover={{ bgColor: onClick ? '#667085' : undefined }}
         >
             {numbered &&
                 <Td py={2}>
-                    <Text color={TextColor.label}>{index + 1 + (currentPage * perPage) - perPage}</Text>
+                    <Text color={TextColor.label} fontSize={'12px'}>{index + 1 + (currentPage * perPage) - perPage}</Text>
                     {/* <input type="checkbox" /> */}
                 </Td>
             }

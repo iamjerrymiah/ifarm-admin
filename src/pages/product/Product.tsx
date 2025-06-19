@@ -14,10 +14,10 @@ import Pagination from '../../common/Pagination/Pagination';
 
 const dataFields = [
     { name: 'Product Name', key: 'name', img: 'img', withImg: true },    
-    { name: 'Product ID', key: 'id', idChange: true},    
-    { name: 'Product SKU/ID', key: 'sku' },
+    // { name: 'Product ID', key: 'id', idChange: true},    
+    { name: 'Product SKU/ID', key: 'sku', idChange: true },
     { name: 'Stock', key: 'quantity', numShortForm: true},
-    { name: 'Category', key: 'category'},
+    { name: 'Category', key: 'category_name'},
     { name: 'Price', key: 'price', money: true },
     { name: 'Last Updated', key: 'updated_at', date: true }, 
     { name: 'Status', key: 'status'},
@@ -41,7 +41,7 @@ const ProductTable = ({
 
     const editProduct = (datum:any) => { navigate(`/main/product-management/edit/${datum?.id}`) }
     const viewProduct = (datum:any) => { navigate(`/main/product-management/view/${datum?.id}`) }
-
+// search_query
     return (
         <Box w='100%'>
             <Box overflowX="auto" className='scroll-custom'>
@@ -50,7 +50,7 @@ const ProductTable = ({
                         <Input 
                             name="search"
                             value={filter?.search}
-                            placeholder="Search product by name, category, ID or keywords" 
+                            placeholder="Search product by name, category, SKU/ID or keywords" 
                             leftElement={(<BsSearch />)}
                         />
                     </Flex>

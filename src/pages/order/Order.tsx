@@ -8,6 +8,8 @@ import { Table } from '../../common/Table/Table'
 import { useState } from 'react'
 import PageMainContainer from '../../common/PageMain/PageMain'
 import { useNavigate } from 'react-router'
+import { useGetOrders } from '../../service/order/orderHook'
+import Pagination from '../../common/Pagination/Pagination'
 
 
 const dataFields = [
@@ -22,10 +24,21 @@ const dataFields = [
     { name: 'Assigned Dispatch', key: 'assignedDispatch'},
 ]
 
-function OrderTable({filter}:any) {
+function OrderTable({
+    orders = [],
+    filter, 
+    setFilter, 
+    isLoading, 
+    currentPage, 
+    totalPages 
+}:any) {
 
     const navigate = useNavigate()
     const viewOrder = (datum:any) => { navigate(`/main/order-management/view/${datum?.id}`) }
+
+    const changePage = ({ selected = 0 }) => {
+        setFilter({ ...filter, page: selected + 1 });
+    }
 
     return (
         <Box w='100%'>
@@ -54,21 +67,27 @@ function OrderTable({filter}:any) {
 
             <Table
                 tableFields={dataFields}
-                tableData={[{id: 'jdudjskke2'}]}
+                tableData={orders}
                 emptyText={'No data found'}
-                loading={false}
+                loading={isLoading}
                 numbered
                 options={[
                     {
                         name: 'View',
                         onUse: (datum: any) => { viewOrder(datum) },
                     },
-                    {
-                        name: 'Delete',
-                        color: 'red.500',
-                        onUse: (datum: any) => { },
-                    },
+                    // {
+                    //     name: 'Delete',
+                    //     color: 'red.500',
+                    //     onUse: (datum: any) => { },
+                    // },
                 ]}
+            />
+
+            <Pagination
+                onPageChange={changePage}
+                currentPage={currentPage}
+                pageCount={totalPages}
             />
 
         </Box>
@@ -76,7 +95,12 @@ function OrderTable({filter}:any) {
 }
 
 export default function Order() {
+
     const [filter, setFilter] = useState<any>({})
+
+    const { data: initData = {}, isLoading } = useGetOrders(filter)
+    const { data: orderData = {} } = initData
+    const orders:any[] = orderData?.data
 
     return (
         <PageMainContainer title="Order Management" description="Order Management">
@@ -89,17 +113,20 @@ export default function Order() {
                             variant='outline'
                             color={'#0E2354'}
                         />
-                        {/* <Button 
-                            text='Add Order'
-                            iconType='add'
-                        /> */}
                     </HStack>
                 </PageHeading>
 
                 <Tabs 
                     headings={["All Order", "Preparing", "Dispatched", "Delivered", "Cancelled"]}
                     panels={[
-                        <OrderTable filter={filter} />,
+                        <OrderTable 
+                            filter={filter}
+                            setFilter={setFilter}
+                            orders={[{id: 'jdjfkfjsj'}, orders]}
+                            isLoading={isLoading}
+                            currentPage={orderData?.current_page}
+                            totalPages={orderData?.total}
+                        />,
                         <></>,
                         <></>,
                         <></>,

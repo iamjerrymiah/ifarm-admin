@@ -4,6 +4,10 @@ import { Table } from "../../common/Table/Table";
 import StatCard from "./components/StatCard";
 import TransactionChart from "./components/TransactionChart";
 import PageMainContainer from "../../common/PageMain/PageMain";
+import { useGetTransaction, useGetTransactionStat } from "../../service/transaction/transactionHook";
+import { formatNumberToShortForm } from "../../utils/utils";
+import Pagination from "../../common/Pagination/Pagination";
+import { useState } from "react";
 
 const dataFields = [  
     { name: 'Transaction ID', key: 'id', idChange: true},    
@@ -16,6 +20,19 @@ const dataFields = [
 ]
 
 export default function Payment() {
+
+    const [filter, setFilter] = useState<any>({})
+
+    const { data: transactionData = {}, isLoading } = useGetTransaction(filter)
+    const { data: transactions = {} } = transactionData;
+
+    const { data:statData = {}, isLoading:statLoad } = useGetTransactionStat({})
+    const { data: stats = {} } = statData;
+
+    const changePage = ({ selected = 0 }) => {
+        setFilter({ ...filter, page: selected + 1 });
+    }
+
     return (
         <PageMainContainer title="Payment & Revenue" description="Payment & Revenue">
             <Box w='100%'>
@@ -24,10 +41,32 @@ export default function Payment() {
                 <Box pb={10}>
         
                     <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4} mb={6}>
-                        <StatCard label="Total Sales" value="₦1,400,294" />
-                        <StatCard label="Orders" value="50,00" />
-                        <StatCard label="Total Revenue" value="₦11,44,294" growth="+24%" line="#FFF3F1" bgColor="#FAFBFB" />
-                        <StatCard label="Page Views" value="44,294" growth="+24%" line="#FFF3F1" bgColor="#FAFBFB" />
+                        <StatCard 
+                            label="Total Sales" 
+                            isLoading={statLoad} 
+                            value={formatNumberToShortForm(Number(stats?.total_sales || 0), 3) ?? 0} 
+                        />
+                        <StatCard 
+                            label="Orders" 
+                            isLoading={statLoad} 
+                            value={formatNumberToShortForm(Number(stats?.total_orders || 0), 3) ?? 0}
+                        />
+                        <StatCard 
+                            label="Total Revenue" 
+                            isLoading={statLoad} 
+                            value={formatNumberToShortForm(Number(stats?.total_revenue || 0), 3) ?? 0}
+                            growth="+24%" 
+                            line="#FFF3F1" 
+                            bgColor="#FAFBFB" 
+                        />
+                        <StatCard 
+                            label="Page Views" 
+                            isLoading={statLoad} 
+                            value={formatNumberToShortForm(Number(stats?.page_views || 0), 3) ?? 0} 
+                            growth="+24%" 
+                            line="#FFF3F1" 
+                            bgColor="#FAFBFB" 
+                        />
                     </SimpleGrid>
 
                     <Grid 
@@ -71,27 +110,18 @@ export default function Payment() {
                 </Box>
 
                 <Table
-                    title="Recent Transactions " 
+                    title="Recent Transactions" 
                     tableFields={dataFields}
-                    tableData={[]}
+                    tableData={transactions?.data ?? []}
                     emptyText={'No data found'}
-                    loading={false}
+                    loading={isLoading}
                     numbered
-                    options={[
-                        {
-                            name: 'View',
-                            onUse: (datum: any) => {  },
-                        },                    
-                        {
-                            name: 'Edit',
-                            onUse: (datum: any) => {  },
-                        },
-                        {
-                            name: 'Delete',
-                            color: 'red.500',
-                            onUse: (datum: any) => { },
-                        },
-                    ]}
+                />
+
+                <Pagination
+                    onPageChange={changePage}
+                    currentPage={transactions?.current_page}
+                    pageCount={transactions?.total}
                 />
             </Box>
         </PageMainContainer>

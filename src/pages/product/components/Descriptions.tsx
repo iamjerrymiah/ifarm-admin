@@ -1,4 +1,5 @@
 import { Grid, GridItem, HStack, Stack, Text } from "@chakra-ui/react";
+import { prettyDateFormat } from "../../../utils/utils";
 
 function OrderText({title, value}:any) {
     return (
@@ -9,7 +10,9 @@ function OrderText({title, value}:any) {
     )
 }
 
-export default function Descriptions() {
+export default function Descriptions({data = {}}:any) {
+    const splittedTags = data?.tags?.join(", ");
+
     return (
             <Grid
                 gap={[3]} 
@@ -17,21 +20,17 @@ export default function Descriptions() {
             >
                 <GridItem>
                     <Stack spacing={0}>
-                        <OrderText title="Weight:" value={"03"}/>
-                        <OrderText title="Color:" value={"Red"}/>
-                        <OrderText title="Type:" value={"Organic"}/>
-                        <OrderText title="Category:" value={"Vegetables"}/>
-                        <OrderText title="Stock Status:" value={"Available"}/>
-                        <OrderText title="Tags:" value={"Vegetables, Healthy, Nigerian"}/>
+                        <OrderText title="Publication Date:" value={prettyDateFormat(data?.publication_date) ?? ""}/>
+                        <OrderText title="Unit of Measurement:" value={data?.unit_of_measure ?? ""}/>
+                        <OrderText title="Tags:" value={splittedTags ?? ""}/>
+                        <OrderText title="Specifications:" value={data?.specifications}/>
+                        <OrderText title="Custom Attributes:" value={data?.custom_attributes ?? ""}/>
+                        <OrderText title="SEO Title:" value={data?.seo_title ?? ""}/>
+                        {/* <OrderText title="SEO Description:" value={data?.seo_description ?? ""}/> */}
                     </Stack>
                 </GridItem>
                 <GridItem>
-                    <Text fontSize={'13px'} color={'#475467'}>
-                        Experience the authentic taste of Nigeria with our premium tomatoes, handpicked at peak ripeness from local farms. 
-                        Bathed in the warm Nigerian sun, these tomatoes sport a vivid, inviting red hue and a firm yet juicy texture that perfectly balances sweetness with a hint of tanginess. 
-                        Whether tossed into a fresh salad, blended into a vibrant sauce, or simply enjoyed on their own, each tomato bursts with the natural, wholesome flavor that only careful, 
-                        sustainable farming can deliver. Enjoy a nutrient-packed, farm-to-table delight that not only nourishes your body but also supports local agricultural communities.
-                    </Text>
+                    <Text fontSize={'13px'} color={'#475467'}>{data?.long_description ?? ''}</Text>
                 </GridItem>
             </Grid>
     )

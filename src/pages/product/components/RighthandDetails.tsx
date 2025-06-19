@@ -1,11 +1,15 @@
-import { Badge, Divider, Flex, HStack, IconButton, Image, Text, VStack } from '@chakra-ui/react'
+import { Badge, Divider, Flex, HStack, IconButton, Image, Tag, Text, VStack } from '@chakra-ui/react'
 import { ElementColor, TextColor } from '../../../constants/colors'
 import Rating from '../../../common/Form/Rating'
 import { FaFacebookF, FaInstagram, FaPinterestP, FaTwitter } from 'react-icons/fa'
+import { allLower, capCase, formatNumberToShortForm, moneyFormat } from '../../../utils/utils'
 
 export default function RighthandDetails({
     data = {}
 }:{data:any}) {
+
+    const oldPrice = data?.price / (1 - data?.discount / 100);
+
     return (
         <VStack 
             alignItems="flex-start" 
@@ -14,22 +18,22 @@ export default function RighthandDetails({
             className="scroll-custom"
         >
             <HStack>
-                <Text color={TextColor.heading} fontSize={'26px'} fontWeight={600}>{data?.name}</Text>
-                <Badge bgColor={'#03723D33'} color={'#03723D'} px={2} py={1} borderRadius={'4px'}>{data?.availablity}</Badge>
+                <Text color={TextColor.heading} fontSize={'26px'} fontWeight={600}>{capCase(data?.name) ?? ""}</Text>
+                <Badge bgColor={'#03723D33'} color={'#03723D'} px={2} py={1} borderRadius={'4px'}>{data?.availablity ?? "In Stock"}</Badge>
             </HStack>
 
             <Flex mt={'5px'}>
-                <Rating rating={data?.rating} numReviews={data?.numReviews} dot/>
-                <Text fontSize="sm">SKU: 251,594</Text>
+                <Rating rating={data?.ratings_avg_rating ?? 0} dot/>
+                <Text fontSize="sm">SKU: {data?.sku ?? ""}</Text>
             </Flex>
 
             <HStack spacing={4} mt={'6px'}>
                 <HStack>
-                    <Text color="#D0D5DD" as="s" fontSize="lg">{data?.oldPrice}</Text>
-                    <Text fontSize="2xl" fontWeight="bold" color={ElementColor.primary}>{data?.price}</Text>
+                    <Text color="#D0D5DD" as="s" fontSize="lg">{moneyFormat(oldPrice ?? 0) ?? 0}</Text>
+                    <Text fontSize="2xl" fontWeight="bold" color={ElementColor.primary}>₦{moneyFormat(data?.price) ?? "0.0"}</Text>
                 </HStack>
 
-                <Badge px={2} py={1} bgColor={'#EA4B481A'} borderRadius={'30px'} color="#EA4B48">64% Off</Badge>
+                <Badge px={2} py={1} bgColor={'#EA4B481A'} borderRadius={'30px'} color="#EA4B48">{data?.discount ?? "0"}% Off</Badge>
             </HStack>
             <Divider mt={3}/>
 
@@ -49,13 +53,17 @@ export default function RighthandDetails({
             </HStack>
 
             <Text mt={'10px'} fontSize="13px" color="#475467">
-                Our tomatoes are handpicked at peak ripeness and undergo strict quality checks before shipping. Enjoy the succulent taste of produce delivered within hours of harvest.
+                {data?.short_description ?? ""}
             </Text>
 
             <VStack color={'#475467'} alignItems="flex-start" fontSize={'13px'} mt={'5px'}>
-                <HStack><Text color={'#101828'}>Category:</Text> <p>{data?.category}</p></HStack>
-                <HStack><Text color={'#101828'}>Tags:</Text> <p>{data?.tags}</p></HStack>
-            </VStack>
+                <HStack><Text color={'#101828'}>Quantity:</Text> <p>{formatNumberToShortForm(data?.quantity ?? 0, 5) ?? "0"}</p></HStack>
+                <HStack>
+                    <Text color={'#101828'}>Stock Status:</Text> 
+                    {allLower(data?.status) === 'active' ? <Tag size={'sm'} colorScheme='whatsapp' py={1} px={2} color={'#027A48'}>{data?.status}</Tag> : <Tag size={'sm'} colorScheme='red' py={1} px={2} color={'#F15046'}>{"Inactive"}</Tag>} 
+                </HStack>
+                <HStack><Text color={'#101828'}>Category:</Text> <p>{data?.category?.name ?? ""}</p></HStack>
+            </VStack> 
         </VStack>
     )
 }

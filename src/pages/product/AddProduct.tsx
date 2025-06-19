@@ -39,6 +39,7 @@ export default function AddProduct() {
 
     return (
         <PageMainContainer title="Production Management" description="Production Management">
+
             <Form w='100%' pb={10} onSubmit={formAction}>
                 <Text pt={[0,0,0,2]} px={[0,0,0,4]} color={TextColor.heading} fontSize={'24px'} fontWeight={500} lineHeight={2}>{"Create New Product"}</Text>
                 <PageHeading titleSize="18px" title="Product Creation Form" subHeading="Update product details here.">
@@ -76,6 +77,7 @@ export default function AddProduct() {
                 </Box>
                 
             </Form>
+
         </PageMainContainer>
     )
 }

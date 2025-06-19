@@ -3,13 +3,15 @@ import FormSection from "../../../common/Form/FormSection";
 import { Input } from "../../../common/Form/Input";
 import { Select } from "../../../common/Form/Select";
 import Switch from "../../../common/Form/Switch";
+import { allLower } from "../../../utils/utils";
 
 export default function UserForm({
     edit,
     data = {},
     errors = {},
+    onChange,
     controller,
-}:{edit?:boolean; data?:any; errors?:any; controller?:any;}) {
+}:{edit?:boolean; data?:any; errors?:any; onChange?:any; controller?:any;}) {
 
     return (
         <Box w='100%'>
@@ -17,7 +19,7 @@ export default function UserForm({
                 <Box>
                     <Input 
                         label="Full Name"
-                        name=""
+                        name="name"
                         value={data?.name}
                         onChange={controller}
                         errors={errors}
@@ -25,7 +27,7 @@ export default function UserForm({
                     />
                     <Input 
                         label="Username"
-                        name=""
+                        name="username"
                         value={data?.username}
                         onChange={controller}
                         errors={errors}
@@ -34,50 +36,54 @@ export default function UserForm({
                     <Input 
                         label="Email"
                         type="email"
-                        name=""
+                        name="email"
                         value={data?.email}
                         onChange={controller}
                         errors={errors}
                         required
                     />
-                    <Input 
-                        label="Pasword"
-                        type="password"
-                        name=""
-                        value={data?.password}
-                        onChange={controller}
-                        errors={errors}
-                        required
-                    />
-                    <Input 
-                        label="Confirm Password"
-                        type="password"
-                        name=""
-                        value={data?.confirmPassword}
-                        onChange={controller}
-                        errors={errors}
-                        required
-                    />
+                    {!edit &&
+                    <>
+                        <Input 
+                            label="Pasword"
+                            type="password"
+                            name="password"
+                            value={data?.password}
+                            onChange={controller}
+                            errors={errors}
+                            required
+                        />
+                        <Input 
+                            label="Confirm Password"
+                            type="password"
+                            name="password_confirmation"
+                            value={data?.password_confirmation}
+                            onChange={controller}
+                            errors={errors}
+                            required
+                        />
+                    </>
+                    }
                 </Box>
             </FormSection>
 
             <FormSection title="Account Information">
                 <Select 
                     label="User Role"
-                    name=""
+                    name="role"
                     value={data?.role}
                     onChange={controller}
                     errors={errors}
-                    options={[]}
+                    options={["customer", "administrator"]}
                     required
                 />
                 <Select 
                     label="Account Status"
-                    name=""
-                    value={data?.accountStatus}
+                    name="status"
+                    value={data?.status}
                     onChange={controller}
                     errors={errors}
-                    options={[]}
+                    options={['active', 'inactive']}
                     required
                 />
             </FormSection>
@@ -91,7 +97,7 @@ export default function UserForm({
                     <Input 
                         label="Phone Number"
                         type="number"
-                        name=""
+                        name="phone"
                         value={data?.phone}
                         onChange={controller}
                         errors={errors}
@@ -99,7 +105,7 @@ export default function UserForm({
                     />
                     <Input 
                         label="Address"
-                        name=""
+                        name="address"
                         value={data?.address}
                         onChange={controller}
                         errors={errors}
@@ -107,8 +113,8 @@ export default function UserForm({
                     />
                     <Input 
                         label="Additional Notes"
-                        name=""
-                        value={data?.note}
+                        name="additional_info"
+                        value={data?.additional_info}
                         onChange={controller}
                         errors={errors}
                         placeholder="Any additional remarks"
@@ -116,41 +122,51 @@ export default function UserForm({
                 </Box>
             </FormSection>
 
-            <FormSection title="Permissions & Settings">
-                <Box>
-                    <Switch 
-                        label="Manage Orders"
-                        name=""
-                        value={data?.manageOrder}
-                        onChange={controller}
-                    />
-                    <Switch 
-                        label="Manage Users"
-                        name=""
-                        value={data?.manageUsers}
-                        onChange={controller}
-                    />
-                    <Switch 
-                        label="Manage Products"
-                        name=""
-                        value={data?.manageProduct}
-                        onChange={controller}
-                    />
-                </Box>
-            </FormSection>
+            {allLower(data?.role) === "administrator" &&
+                <FormSection title="Permissions & Settings">
+                    <Box>
+                        <Switch 
+                            label="Manage Orders"
+                            name="manage_order"
+                            value={data?.manage_order}
+                            onChange={controller}
+                        />
+                        <Switch 
+                            label="Manage Users"
+                            name="manage_users"
+                            value={data?.manage_users}
+                            onChange={controller}
+                        />
+                        <Switch 
+                            label="Manage Products"
+                            name="manage_product"
+                            value={data?.manage_product}
+                            onChange={controller}
+                        />
+                    </Box>
+                </FormSection>
+            }
 
             <FormSection title="Notification Preferences">
                 <Box>
+                    {/* <Select 
+                        label="Notification Type"
+                        name="notification_preferences"
+                        value={data?.notification_preferences}
+                        onChange={controller}
+                        errors={errors}
+                        options={['email', 'sms']}
+                    /> */}
                     <Switch 
                         label="Email Notifications"
-                        name=""
-                        value={data?.emailNotification}
+                        name="email_notification"
+                        value={data?.email_notification}
                         onChange={controller}
                     />
                     <Switch 
                         label="SMS Notifications"
-                        name=""
-                        value={data?.smsNotification}
+                        name="sms_notification"
+                        value={data?.sms_notification}
                         onChange={controller}
                     />
                 </Box>

@@ -10,7 +10,6 @@ import { useGetProduct, useUpdateProduct } from "../../service/product/productHo
 import Form from "../../common/Form/Form";
 import { isObjectPropsEmpty } from "../../utils/utils";
 import { useEffect } from "react";
-import TransparentLoader from "../../common/Loader/TransparentLoader";
 import Notify from "../../utils/notify";
 
 export default function EditProduct() {
@@ -42,13 +41,16 @@ export default function EditProduct() {
 
     useEffect(() => { if(!isLoading) { setFormData({...product?.data}) } }, [isLoading])
 
-    if(isLoading) {return(<TransparentLoader />)}
-
     return (
         <PageMainContainer title="Production Management" description="Production Management">
             <Form w='100%' pb={10} onSubmit={formAction}>
                 <Text pt={[0,0,0,2]} px={[0,0,0,4]} color={TextColor.heading} fontSize={'24px'} fontWeight={500} lineHeight={2}>{"Edit Product"}</Text>
-                <PageHeading titleSize="18px" title="Product Editing Form" subHeading="Update product details here.">
+                <PageHeading 
+                    isLoading={isLoading}
+                    titleSize="18px" 
+                    title="Product Editing Form" 
+                    subHeading="Update product details here."
+                >
                     <Button 
                         text='Back'
                         iconType="back"
@@ -67,7 +69,7 @@ export default function EditProduct() {
                     />
                     <Button 
                         type="submit"
-                        text='Submit'
+                        text='Save & Edit'
                         isLoading={formState.pending}
                         disabled={formState.pending || isObjectPropsEmpty(data)}
                     />

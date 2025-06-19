@@ -30,6 +30,10 @@ const feedbackFields = [
 ]
 
 function SupportTicketTable ({filter}:any){
+
+    const navigate = useNavigate()
+    const viewSupportTicket = (data:any) => { navigate(`/main/customer-support/ticket/view/${data?.id}`) }
+   
     return (
         <Box w='100%'>
             <Box overflowX="auto">
@@ -57,19 +61,15 @@ function SupportTicketTable ({filter}:any){
 
             <Table
                 tableFields={supportFields}
-                tableData={[]}
+                tableData={[{id: "hxsgdjdojsiu"}]}
                 emptyText={'No data found'}
                 loading={false}
                 numbered
                 options={[
                     {
                         name: 'View',
-                        onUse: (datum: any) => {  },
-                    },                    
-                    {
-                        name: 'Edit',
-                        onUse: (datum: any) => {  },
-                    },
+                        onUse: (datum: any) => { viewSupportTicket(datum) },
+                    }, 
                     {
                         name: 'Delete',
                         color: 'red.500',
@@ -84,6 +84,10 @@ function SupportTicketTable ({filter}:any){
 
 
 function FeedbackTable ({filter}:any) {
+
+    const navigate = useNavigate()
+    const viewFeedback = (data:any) => { navigate(`/main/customer-support/feedback/view/${data?.id}`) }
+
     return (
         <Box w='100%'>
             <Box overflowX="auto">
@@ -111,19 +115,15 @@ function FeedbackTable ({filter}:any) {
 
             <Table
                 tableFields={feedbackFields}
-                tableData={[]}
+                tableData={[{id: "jdjkhuss"}]}
                 emptyText={'No data found'}
                 loading={false}
                 numbered
                 options={[
                     {
                         name: 'View',
-                        onUse: (datum: any) => {  },
-                    },                    
-                    {
-                        name: 'Edit',
-                        onUse: (datum: any) => {  },
-                    },
+                        onUse: (datum: any) => { viewFeedback(datum) },
+                    }, 
                     {
                         name: 'Delete',
                         color: 'red.500',

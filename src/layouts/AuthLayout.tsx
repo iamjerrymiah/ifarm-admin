@@ -300,7 +300,7 @@ export default function AuthLayout() {
     const { } = useGetAuthUser(!isAuthenticated && !user);
     // const { } = useGetAuthUser(true);
 
-    useEffect(() => { if (!isLoading && isAuthenticated === false) {navigate("/auth/login"); Notify.error('Unauthenticated! Please log in.'); } }, [isLoading, isAuthenticated]);
+    useEffect(() => { if (!isLoading && isAuthenticated === false && !user) {navigate("/auth/login"); Notify.error('Unauthenticated! Please log in.'); } }, [isLoading, user, isAuthenticated]);
 
     // if(isLoading) {return(<Loader />)}
 

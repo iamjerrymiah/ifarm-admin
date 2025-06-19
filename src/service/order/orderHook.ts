@@ -1,36 +1,36 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import queryString from 'query-string';
-import { customFormdataMutationRequest, fetcher } from '../../utils/api';
+import { customMutationRequest, fetcher } from '../../utils/api';
 
-const key = 'users';
+const key = 'orders';
 
-export const useGetUsers = (params:any) => {
+export const useGetOrders = (params:any) => {
     let queries = !!params ? queryString.stringify(params) : '';
     return useQuery({
         queryKey: [key, params],
         queryFn: async () => {
-            const res: any = await fetcher(`/users?${queries}`);
+            const res: any = await fetcher(`/orders?${queries}`);
             return res;
         }
     });
 };
 
-export const useGetUser = (id: any) => {
+export const useGetOrder = (id: any) => {
     return useQuery({
         queryKey: [key, id],
         queryFn: async () => {
-            const res: any = await fetcher(`/users/${id}`);
+            const res: any = await fetcher(`/orders/${id}`);
             return res;
         },
         enabled: !!id,
     });
 };
 
-export const useCreateUser = () => {
+export const useUpdateOrderStatus = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (data: any) => {
-            return customFormdataMutationRequest(`/users`, 'POST', data).then((res:any) => res)
+            return customMutationRequest(`/orders/update-status/${data?.id}`, 'PATCH', data).then((res:any) => res)
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [key] });

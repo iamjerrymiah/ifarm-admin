@@ -1,8 +1,6 @@
-'use client';
-
-import { Box, HStack, Stack, StackDirection, StackProps as ChakraStackProps, BoxProps, Text } from '@chakra-ui/react'
+import { Box, HStack, Stack, StackDirection, StackProps as ChakraStackProps, BoxProps, Text, Spinner } from '@chakra-ui/react'
 import React from 'react'
-import { TextColor } from '../../constants/colors';
+import { ElementColor, TextColor } from '../../constants/colors';
 
 interface PageHeadingProps {
     title?: string;
@@ -15,9 +13,10 @@ interface PageHeadingProps {
     node?: React.ReactNode;
     childrenProps?: BoxProps;
     noBB?: boolean;
+    isLoading?: boolean;
 }
 
-function PageHeading({ title, subHeading, titleSize, fontSize, children, color, direction, node, childrenProps, noBB, ...props }: PageHeadingProps & ChakraStackProps) {
+function PageHeading({ title, subHeading, titleSize, fontSize, children, color, direction, node, isLoading, childrenProps, noBB, ...props }: PageHeadingProps & ChakraStackProps) {
     return (
         <Stack
             direction={direction ?? ['column', 'column', 'column', 'row']}
@@ -36,10 +35,13 @@ function PageHeading({ title, subHeading, titleSize, fontSize, children, color, 
         >
             {
                 node ? <Box mt='2'>{node}</Box> :
-                <Stack>
-                    <Text color={color ?? TextColor.heading} fontSize={titleSize ?? '24px'} fontWeight={500} lineHeight={2}>{title}</Text>
-                    <Text mt={'-4'} color={'#475467'} fontWeight={400} fontSize={['12px', '14px']}>{subHeading}</Text>
-                </Stack>
+                <HStack gap={3}>
+                    <Stack>
+                        <Text color={color ?? TextColor.heading} fontSize={titleSize ?? ['20px', '24px']} fontWeight={500} lineHeight={2}>{title}</Text>
+                        <Text mt={'-4'} color={'#475467'} fontWeight={400} fontSize={['12px', '14px']}>{subHeading}</Text>
+                    </Stack>
+                    {isLoading && <Spinner w='20px' h='20px' thickness='10px' speed='1s' color={ElementColor.primary}/> }
+                </HStack>
             }
             {children &&
                 <HStack {...childrenProps}>

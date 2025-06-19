@@ -12,17 +12,30 @@ import Descriptions from "./components/Descriptions";
 import CustomerFeedback from "./components/CustomerFeedback";
 import PageMainContainer from "../../common/PageMain/PageMain";
 import { useGetProduct } from "../../service/product/productHook";
-import TransparentLoader from "../../common/Loader/TransparentLoader";
+// import TransparentLoader from "../../common/Loader/TransparentLoader";
 
 const mockData = {
-    name: "Tomatoes",
-    availablity: "In Stock",
-    rating: 4,
-    numReviews: 5,
-    oldPrice: "₦108,000",
-    price: "₦90,000",
-    category: "Vegetables",
-    tags: "Vegetables, Healthy, Nigerian"
+    name: "",
+    sku: "",
+    price: "0.0",
+    discount: "0",
+    quantity: "0",
+    status: "inactive",
+    availablity: "",
+    num_reviews: 0,
+    is_featured: false,
+    ratings_avg_rating: 0,
+    publication_date: "",
+    unit_of_measure: "",
+    specifications: "",
+    short_description: "",
+    long_description: "",
+    custom_attributes: "",
+    seo_title: "",
+    seo_description: "",
+    category: {name: ""},
+    tags: [],
+    images: [],
 }
 
 const dataFields = [  
@@ -35,83 +48,89 @@ const dataFields = [
     { name: 'Total Amount (₦)', key: 'amount', money: true },
 ]
 
-
-export default function ViewProduct() {
+function ViewProductMain ({ id, product = {}, isLoading }:any) {
 
     const navigate = useNavigate()
-    const { id } = useParams<{ id: string; }>();
-
-    const { data: productData = {}, isLoading } = useGetProduct(id)
-    const product = productData?.data
-
     const editProduct = () => { navigate(`/main/product-management/edit/${id}`) }
 
     const mainImage = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg'; // Sample image
     const thumbnails = [mainImage, mainImage, mainImage, mainImage, mainImage, mainImage, mainImage];
 
-    if(isLoading) {return(<TransparentLoader />)}
+    return (
+        <Box w='100%' pb={10}>
+            <PageHeading titleSize="20px" title="View Product" subHeading="Update product details here.">
+                <Button 
+                    text='Back'
+                    iconType="back"
+                    bgColor={'gray'}
+                    onClick={() => navigate(-1)}
+                />
+                <Button 
+                    text='Delete'
+                    bgColor={'#101828'}
+                />
+                <Button 
+                    text='Edit Product'
+                    onClick={editProduct}
+                />
+            </PageHeading>
+
+            <Grid
+                mt={8} 
+                gap={[8,8,8,5]} 
+                templateColumns={{ base: "1fr", sm: "1fr", md: "1fr", lg: "1.5fr 1fr" }} 
+            >
+                <GridItem>
+                    <LefthandImagery 
+                        mainImage={mainImage} 
+                        thumbnails={thumbnails}
+                    />
+                </GridItem>
+
+                <GridItem>
+                    <RighthandDetails data={product} />
+                </GridItem>
+            </Grid>
+
+            <Tabs
+                mt={10} 
+                headings={["Descriptions", "Customer Feedback",]}
+                panels={[
+                    <Descriptions data={product} />,
+                    <CustomerFeedback />,
+                ]}
+            />
+
+            <Table
+                mt={6}
+                title="Recent Orders"
+                tableFields={dataFields}
+                tableData={[]}
+                emptyText={'No data found'}
+                loading={false}
+                numbered
+            />
+            <AdminAction editProduct={editProduct} />
+            <CustomerReviews />
+
+        </Box>
+    )
+}
+
+
+export default function ViewProduct() {
+
+    const { id } = useParams<{ id: string; }>();
+    const { data: productData = {}, isLoading } = useGetProduct(id)
+
 
     return (
         <PageMainContainer title="Production Management" description="Production Management">
-            <Box w='100%' pb={10}>
-                <PageHeading titleSize="20px" title="View Product" subHeading="Update product details here.">
-                    <Button 
-                        text='Back'
-                        iconType="back"
-                        bgColor={'gray'}
-                        onClick={() => navigate(-1)}
-                    />
-                    <Button 
-                        text='Delete'
-                        bgColor={'#101828'}
-                    />
-                    <Button 
-                        text='Edit Product'
-                        onClick={editProduct}
-                    />
-                </PageHeading>
-
-                <Grid
-                    mt={8} 
-                    gap={[8,8,8,5]} 
-                    templateColumns={{ base: "1fr", sm: "1fr", md: "1fr", lg: "1.5fr 1fr" }} 
-                >
-                    <GridItem>
-                        <LefthandImagery 
-                            mainImage={mainImage} 
-                            thumbnails={thumbnails}
-                        />
-                    </GridItem>
-
-                    <GridItem>
-                        <RighthandDetails 
-                            data={mockData}
-                        />
-                    </GridItem>
-                </Grid>
-
-                <Tabs
-                    mt={10} 
-                    headings={["Descriptions", "Customer Feedback",]}
-                    panels={[
-                        <Descriptions />,
-                        <CustomerFeedback />,
-                    ]}
-                />
-
-                <Table
-                    mt={6}
-                    title="Recent Orders"
-                    tableFields={dataFields}
-                    tableData={[]}
-                    emptyText={'No data found'}
-                    loading={false}
-                    numbered
-                />
-                <AdminAction editProduct={editProduct} />
-                <CustomerReviews />
-
-            </Box>
+            <ViewProductMain 
+                id={id}
+                isLoading={isLoading}
+                product={productData?.data ?? mockData}
+            />
         </PageMainContainer>
     )
 }

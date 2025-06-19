@@ -82,7 +82,7 @@ export default function ViewFeedback() {
 
                     <Box my={4}>
                         <b>Attachments</b>
-                        <SimpleGrid spacing={4} columns={[3,6]}>
+                        <SimpleGrid spacing={4} columns={[2,3,3,6]}>
                             <Button leftIcon={<FaPaperclip />} size="sm" colorScheme="blue" variant="ghost">screenshot_error.png</Button>
                             <Button leftIcon={<FaPaperclip />} size="sm" colorScheme="blue" variant="ghost">Package_damage.jpg</Button>
                         </SimpleGrid>
