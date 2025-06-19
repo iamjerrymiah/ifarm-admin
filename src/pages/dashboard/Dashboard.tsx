@@ -47,10 +47,10 @@ export default function Dashboard() {
                 </PageHeading>
 
                 <SimpleGrid spacing={5} columns={[1,2,2,4]}>
-                    <DataInformation isLoading={statLoad} title='Total Orders' value={formatNumberToShortForm(Number(stats?.total_orders) ?? 0, 3)} />
-                    <DataInformation isLoading={statLoad} title='Inventory Status' value={formatNumberToShortForm(Number(stats?.total_inventories) ?? 0, 3)} vsColor='#B42318' dataValue={[45,5,30,1]}/>
-                    <DataInformation isLoading={statLoad} title='Pending Deliveries' value={formatNumberToShortForm(Number(stats?.pending_deliveries) ?? 0, 3)}/>
-                    <DataInformation isLoading={statLoad} title='Total Products' value={formatNumberToShortForm(Number(stats?.total_products) ?? 0, 3)} />
+                    <DataInformation isLoading={statLoad} title='Total Orders' value={formatNumberToShortForm(Number(stats?.total_orders || 0), 3) ?? 0} />
+                    <DataInformation isLoading={statLoad} title='Inventory Status' value={formatNumberToShortForm(Number(stats?.total_inventories || 0), 3) ?? 0} vsColor='#B42318' dataValue={[45,5,30,1]}/>
+                    <DataInformation isLoading={statLoad} title='Pending Deliveries' value={formatNumberToShortForm(Number(stats?.pending_deliveries || 0), 3) ?? 0}/>
+                    <DataInformation isLoading={statLoad} title='Total Products' value={formatNumberToShortForm(Number(stats?.total_products || 0), 3) ?? 0} />
                 </SimpleGrid>
 
                 <Box bg="white" borderRadius="md" mt={6} mb={10} overflowX={'scroll'} className='scroll-custom'>

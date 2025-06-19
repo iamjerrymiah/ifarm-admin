@@ -26,10 +26,10 @@ import { Input } from "../common/Form/Input";
 import { BsSearch } from "react-icons/bs";
 import { Container } from "../styling/layout";
 import { useGetAuthState, useGetAuthUser, useLogout } from "../service/auth/authHook";
-// import Loader from "../common/Loader/Loader";
 import Notify from "../utils/notify";
 import { useConfirmAction } from "../hooks/useActions";
 import ConfirmModal from "../common/Modal/ConfirmModal";
+import TransparentLoader from "../common/Loader/TransparentLoader";
 
 interface sidebarLinksProps {
     label: string;
@@ -302,7 +302,7 @@ export default function AuthLayout() {
 
     useEffect(() => { if (!isLoading && isAuthenticated === false) {navigate("/auth/login"); Notify.error('Unauthenticated! Please log in.'); } }, [isLoading, isAuthenticated]);
 
-    // if(isLoading) {return(<Loader />)}
+    if(isLoading) {return(<TransparentLoader />)}
 
     return (
         <Box w='100%'>

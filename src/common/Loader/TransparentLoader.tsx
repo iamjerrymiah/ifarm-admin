@@ -10,7 +10,9 @@ export default function TransparentLoader() {
             left={0}
             width="100vw"
             height="100vh"
-            bg="rgba(255, 255, 255, 0.5)"
+            // bg="rgba(255, 255, 255, 0.5)"
+            bgColor={'rgba(0,0,0,0.5)'}
+            backdropFilter={{ blur: '6px' }}
             display="flex"
             alignItems="center"
             justifyContent="center"
