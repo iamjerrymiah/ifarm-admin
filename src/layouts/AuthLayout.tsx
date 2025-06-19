@@ -29,7 +29,7 @@ import { useGetAuthState, useGetAuthUser, useLogout } from "../service/auth/auth
 import Notify from "../utils/notify";
 import { useConfirmAction } from "../hooks/useActions";
 import ConfirmModal from "../common/Modal/ConfirmModal";
-import TransparentLoader from "../common/Loader/TransparentLoader";
+// import Loader from "../common/Loader/Loader";
 
 interface sidebarLinksProps {
     label: string;
@@ -302,7 +302,7 @@ export default function AuthLayout() {
 
     useEffect(() => { if (!isLoading && isAuthenticated === false) {navigate("/auth/login"); Notify.error('Unauthenticated! Please log in.'); } }, [isLoading, isAuthenticated]);
 
-    if(isLoading) {return(<TransparentLoader />)}
+    // if(isLoading) {return(<Loader />)}
 
     return (
         <Box w='100%'>
