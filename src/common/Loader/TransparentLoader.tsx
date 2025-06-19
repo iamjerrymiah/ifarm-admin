@@ -10,9 +10,9 @@ export default function TransparentLoader() {
             left={0}
             width="100vw"
             height="100vh"
-            // bg="rgba(255, 255, 255, 0.5)"
-            bgColor={'rgba(0,0,0,0.5)'}
-            backdropFilter={{ blur: '6px' }}
+            bg="transparent"
+            backdropFilter="blur(4px)" // subtle blur
+            backgroundColor="rgba(255, 255, 255, 0.2)" // slight overlay
             display="flex"
             alignItems="center"
             justifyContent="center"
@@ -20,5 +20,5 @@ export default function TransparentLoader() {
         >
             <Spinner size="xl" color={ElementColor.primary} thickness="5px" />
         </Box>
-    )
+    );
 }
