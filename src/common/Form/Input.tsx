@@ -1,5 +1,3 @@
-'use client'
-
 import { InputProps as ChakraInputProps, InputGroup, InputRightElement, InputLeftElement, Input as ChakraInput, FormControl, FormLabel, Box, Text, Tooltip } from '@chakra-ui/react'
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
 import React, { ChangeEvent, ChangeEventHandler, HTMLInputTypeAttribute } from 'react'

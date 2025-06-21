@@ -37,3 +37,15 @@ export const useCreateUser = () => {
         },
     });
 };
+
+export const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data: any) => {
+            return customFormdataMutationRequest(`/users/${data?.id}`, 'POST', data).then((res:any) => res)
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [key] });
+        },
+    });
+};

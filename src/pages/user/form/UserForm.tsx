@@ -4,14 +4,23 @@ import { Input } from "../../../common/Form/Input";
 import { Select } from "../../../common/Form/Select";
 import Switch from "../../../common/Form/Switch";
 import { allLower } from "../../../utils/utils";
+import ProfileImageUploader from "../../../common/Form/ProfileImageUploader";
 
 export default function UserForm({
     edit,
     data = {},
     errors = {},
+    setFile,
     onChange,
     controller,
-}:{edit?:boolean; data?:any; errors?:any; onChange?:any; controller?:any;}) {
+}:{
+    edit?:boolean; 
+    data?:any; 
+    errors?:any; 
+    setFile:any;
+    onChange?:any; 
+    controller?:any;
+}) {
 
     return (
         <Box w='100%'>
@@ -40,6 +49,7 @@ export default function UserForm({
                         value={data?.email}
                         onChange={controller}
                         errors={errors}
+                        disabled={edit}
                         required
                     />
                     {!edit &&
@@ -89,7 +99,14 @@ export default function UserForm({
             </FormSection>
 
             <FormSection title="Profile Picture">
-                <Box></Box>
+                <Box>
+                    <ProfileImageUploader 
+                        name="file"
+                        setFile={setFile}
+                        avatarName={data?.name ?? ""}
+                        avatarSrc={data?.image_url}
+                    />
+                </Box>
             </FormSection>
 
             <FormSection title="Contact & Additional Information">
@@ -149,14 +166,6 @@ export default function UserForm({
 
             <FormSection title="Notification Preferences">
                 <Box>
-                    {/* <Select 
-                        label="Notification Type"
-                        name="notification_preferences"
-                        value={data?.notification_preferences}
-                        onChange={controller}
-                        errors={errors}
-                        options={['email', 'sms']}
-                    /> */}
                     <Switch 
                         label="Email Notifications"
                         name="email_notification"

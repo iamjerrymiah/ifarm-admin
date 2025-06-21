@@ -2,8 +2,12 @@ import { Box, Flex, Image, Stack } from '@chakra-ui/react'
 
 export default function LefthandImagery({
     mainImage,
-    thumbnails = []
-}:{mainImage:any; thumbnails:any[]}) {
+    thumbnails = [],
+    selectedIndex,
+    setSelectedIndex
+}:{mainImage:any; thumbnails:any[]; selectedIndex:number; setSelectedIndex:any}) {
+
+
     return(
         <Flex gap={1} direction={['row']}>
             <Stack 
@@ -20,7 +24,12 @@ export default function LefthandImagery({
                             alt="" 
                             w={['100px','80px']}
                             h={['50px','100px']} 
-                            objectFit="contain" />
+                            objectFit="contain" 
+                            cursor={'pointer'}
+                            borderRadius={'12px'}
+                            onClick={() => setSelectedIndex(index)}
+                            border={selectedIndex === index ? "1px solid gray" : "none"}
+                        />
                     </Box>
                 ))}
             </Stack>

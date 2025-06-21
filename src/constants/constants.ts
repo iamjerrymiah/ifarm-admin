@@ -3,10 +3,10 @@ export const API_URL = process.env.REACT_APP_API_URL ?? "";
 export const storeToken = 'ifarm_token'
 
 export const statuses = {
-    positive: ['active', 'good', 'done', 'accept', 'accepted', 'successful', 'completed', 'verified', 'yes', 'approved', 'passed', 'employed', 'paid', true],
-    pending: ['pending', 'draft', 'processing', 'reviewing', 'pending_approval'],
+    positive: ['active', 'good', 'done', 'accept', 'accepted', 'successful', 'completed', 'verified', 'yes', 'approved', 'passed', 'employed', 'paid', "delivered", true],
+    pending: ['pending', 'draft', 'processing', 'reviewing', 'pending_approval', "preparing"],
     negative: ['unavailable', 'inactive', 'bad', 'reject', 'rejected', 'failed', 'no', 'denied', 'failed', 'declined', 'disapproved', 'cancelled', false],
-    other: ['available', 'unresolved', 'registered', 'blocked'],
+    other: ['available', 'unresolved', 'registered', 'blocked', 'dispatched'],
 }
 
 export const DEFAULT_SIZE_UNIT = 'px'

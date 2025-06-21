@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button as ChakraButton, ButtonProps as ChakraButtonProps } from '@chakra-ui/react'
-import { MdOutlineDeleteOutline, MdArrowBack } from 'react-icons/md';
+import { MdOutlineDeleteOutline, MdArrowBack, MdLockReset } from 'react-icons/md';
 import { LiaPlusCircleSolid } from "react-icons/lia";
 import { BsFilter } from "react-icons/bs";
 import { ElementColor, TextColor } from '../../constants/colors';
@@ -13,7 +13,7 @@ interface ButtonProps extends ChakraButtonProps {
     loading?: boolean;
     disabled?: boolean;
     radius?: string;
-    iconType?: 'create' | 'edit' | 'delete' | 'save' |'back' | 'next' | 'goto' | 'filter' | 'search' | 'download' | 'add' | 'cancel' | 'export';
+    iconType?: 'create' | 'edit' | 'delete' | 'save' |'back' | 'next' | 'goto' | 'filter' | 'reset' | 'search' | 'download' | 'add' | 'cancel' | 'export';
 }
 
 function Button({
@@ -40,6 +40,7 @@ function Button({
             case 'back': return <MdArrowBack color={iconColor} size={16} />;
             case 'delete': return <MdOutlineDeleteOutline color={iconColor} size={16} />;
             case 'filter': return <BsFilter color={iconColor} size={20} />;
+            case 'reset': return <MdLockReset color={iconColor} size={20} />;
             case 'export': return <PiExportLight color={iconColor} size={20} />;
             default: return <LiaPlusCircleSolid color={iconColor} />
         }

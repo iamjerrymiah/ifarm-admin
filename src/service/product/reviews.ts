@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetcher, customMutationRequest, deleteRequest } from '../../utils/api';
 
-const key = 'products'
+const key = 'products-reveiws'
 
 export const useGetProductReviews = (id: any) => {
     return useQuery({

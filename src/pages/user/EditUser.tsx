@@ -6,10 +6,10 @@ import Button from "../../common/Button/Button";
 import UserForm from "./form/UserForm";
 import Form from "../../common/Form/Form";
 import { useNavigate, useParams } from "react-router";
-import { useCreateUser, useGetUser } from "../../service/user/userHook";
+import { useGetUser, useUpdateUser } from "../../service/user/userHook";
 import Notify from "../../utils/notify";
 import { useCustomFormState } from "../../hooks/useCustomFormState";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { isObjectPropsEmpty } from "../../utils/utils";
 
 export default function EditUser() {
@@ -18,10 +18,15 @@ export default function EditUser() {
     const { id } = useParams<{ id: string; }>();
 
     const { data: user = {}, isLoading } = useGetUser(id)
-    const { mutateAsync } = useCreateUser()
+    const { mutateAsync } = useUpdateUser()
     const handleSubmit = async (data:any) => {
         try {
-            const payload : any = await mutateAsync({...data});
+            const payload : any = await mutateAsync({
+                ...data,
+                image: file?.file,
+                sms_notification: data?.sms_notification == true ? 1 : 0,
+                email_notification: data?.email_notification == true ? 1 : 0
+            });
             Notify.success("Success")
             navigate(`/main/user-management`)
 
@@ -40,6 +45,20 @@ export default function EditUser() {
     }
 
     useEffect(() => { if(!isLoading) { setFormData({...user?.data}) } }, [isLoading])
+    
+    const [ file, setFileData ] = useState({ 
+        file: null 
+    } as any)
+
+    const setFile = (file: any) => {
+        if (file && file.type.startsWith('image/')) {
+            setFileData((prev:any) => ({...prev, file: file, documentName: file?.name }));
+        } else {
+            // Notify the user about the invalid file type
+            Notify.error('Invalid image type. Allowed types: JPEG, PNG, GIF');
+            setFileData((prev:any) => ({...prev, file: null }));
+        }
+    }
 
     return (
         <PageMainContainer title="User Management" description="User Management">
@@ -77,6 +96,7 @@ export default function EditUser() {
                         edit
                         data={data}
                         errors={errors}
+                        setFile={setFile}
                         onChange={onChange}
                         controller={controller}
                     />

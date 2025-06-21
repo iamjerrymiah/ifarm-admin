@@ -8,6 +8,7 @@ import { useGetTransaction, useGetTransactionStat } from "../../service/transact
 import { formatNumberToShortForm } from "../../utils/utils";
 import Pagination from "../../common/Pagination/Pagination";
 import { useState } from "react";
+import DateRangePicker from "./components/DateRangePicker";
 
 const dataFields = [  
     { name: 'Transaction ID', key: 'id', idChange: true},    
@@ -21,49 +22,87 @@ const dataFields = [
 
 export default function Payment() {
 
+    const today = new Date();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(today.getMonth() - 1);
+
+    const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
+    const [range, setRange] = useState({
+        start_date: formatDate(oneMonthAgo),
+        end_date: formatDate(today),
+    });
+
     const [filter, setFilter] = useState<any>({})
+    const [statFilter, setStatFilter] = useState<any>(range)
 
     const { data: transactionData = {}, isLoading } = useGetTransaction(filter)
     const { data: transactions = {} } = transactionData;
 
-    const { data:statData = {}, isLoading:statLoad } = useGetTransactionStat({})
+    const { data:statData = {}, isLoading:statLoad } = useGetTransactionStat(statFilter)
     const { data: stats = {} } = statData;
 
     const changePage = ({ selected = 0 }) => {
         setFilter({ ...filter, page: selected + 1 });
     }
 
+    // const handleDateRangeChange = (range: { start_date: string; end_date: string }) => {
+    //     // setStatFilter({ ...range })
+    // };
+
+    const onFilter = () => {
+        setStatFilter({ ...range });
+    }
+
+
     return (
         <PageMainContainer title="Payment & Revenue" description="Payment & Revenue">
             <Box w='100%'>
-                <PageHeading title='Payment & Revenue'></PageHeading>
+                <PageHeading title='Payment & Revenue' childrenProps={{ overflowX: 'scroll' }}>
+                    <DateRangePicker
+                        today={today} 
+                        range={range}
+                        setRange={setRange}
+                        onFilter={onFilter}
+                        formatDate={formatDate}
+                        // onChange={handleDateRangeChange} 
+                    />
+                </PageHeading>
 
                 <Box pb={10}>
         
                     <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4} mb={6}>
                         <StatCard 
                             label="Total Sales" 
-                            isLoading={statLoad} 
-                            value={formatNumberToShortForm(Number(stats?.total_sales || 0), 3) ?? 0} 
+                            isLoading={statLoad}
+                            endDate={statFilter?.end_date} 
+                            startDate={statFilter?.start_date}
+                            value={`₦${formatNumberToShortForm(Number(stats?.total_sales || 0), 3) ?? 0}`} 
                         />
                         <StatCard 
                             label="Orders" 
                             isLoading={statLoad} 
+                            endDate={statFilter?.end_date}
+                            startDate={statFilter?.start_date}
                             value={formatNumberToShortForm(Number(stats?.total_orders || 0), 3) ?? 0}
                         />
                         <StatCard 
                             label="Total Revenue" 
-                            isLoading={statLoad} 
-                            value={formatNumberToShortForm(Number(stats?.total_revenue || 0), 3) ?? 0}
-                            growth="+24%" 
+                            isLoading={statLoad}
+                            endDate={statFilter?.end_date} 
+                            startDate={statFilter?.start_date}
+                            value={`₦${formatNumberToShortForm(Number(stats?.total_revenue || 0), 3) ?? 0}`}
+                            // growth="+24%" 
                             line="#FFF3F1" 
                             bgColor="#FAFBFB" 
                         />
                         <StatCard 
                             label="Page Views" 
-                            isLoading={statLoad} 
+                            isLoading={statLoad}
+                            endDate={statFilter?.end_date} 
+                            startDate={statFilter?.start_date}
                             value={formatNumberToShortForm(Number(stats?.page_views || 0), 3) ?? 0} 
-                            growth="+24%" 
+                            // growth="+24%" 
                             line="#FFF3F1" 
                             bgColor="#FAFBFB" 
                         />
@@ -100,8 +139,24 @@ export default function Payment() {
 
                         <GridItem pt={[0,0,0,10]} overflowX={'scroll'} className="scroll-custom">
                             <SimpleGrid columns={[1,2,2,1]} spacing={4}>
-                                <StatCard label="Net Revenue" value="₦10,400,294" line="#FFF" borderColor="#F0F2F5" />
-                                <StatCard label="Sales" value="₦10,200,24" line="#FFF" borderColor="#F0F2F5" />
+                                <StatCard 
+                                    label="Net Revenue" 
+                                    isLoading={statLoad}
+                                    endDate={statFilter?.end_date}
+                                    startDate={statFilter?.start_date}
+                                    value={`₦${formatNumberToShortForm(Number(stats?.net_revenue || 0), 3) ?? 0}`}
+                                    line="#FFF" 
+                                    borderColor="#F0F2F5" 
+                                />
+                                <StatCard 
+                                    label="Sales" 
+                                    isLoading={statLoad}
+                                    endDate={statFilter?.end_date}
+                                    startDate={statFilter?.start_date}
+                                    value={`₦${formatNumberToShortForm(Number(stats?.sales || 0), 3) ?? 0}`}
+                                    line="#FFF" 
+                                    borderColor="#F0F2F5" 
+                                />
                             </SimpleGrid>
                         </GridItem>
 

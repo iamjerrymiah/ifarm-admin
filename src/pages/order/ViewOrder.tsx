@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Stack, useDisclosure } from "@chakra-ui/react";
 import PageHeading from "../../common/PageHeader/PageHeading";
 import Button from "../../common/Button/Button";
 import MenuDropdown from "../../common/Menu/MenuDropdown";
@@ -11,6 +11,10 @@ import { useGetOrder, useUpdateOrderStatus } from "../../service/order/orderHook
 import { useConfirmAction } from "../../hooks/useActions";
 import ConfirmModal from "../../common/Modal/ConfirmModal";
 import Notify from "../../utils/notify";
+import ModalCenter from "../../common/Modal/ModalCenter";
+import FilterInput from "../../common/Form/FilterInput";
+import { WithAvatar } from "../product/components/CustomerFeedback";
+import { BsSearch } from "react-icons/bs";
 
 const dataFields = [
     { name: 'Date & Time', key: 'date', date: true}, 
@@ -22,6 +26,7 @@ function ViewOrderMain({ id, order = {}, isLoading }:any) {
 
     const navigate = useNavigate()
 
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpenConfirm:isDispatch, openConfirm:openDispatch, closeConfirm:closeDispatch } = useConfirmAction()
     const { isOpenConfirm:isPreparing, openConfirm:openPreparing, closeConfirm:closePreparing } = useConfirmAction()
     const { isOpenConfirm:isDelivered, openConfirm:openDelivered, closeConfirm:closeDelivered } = useConfirmAction()
@@ -46,7 +51,7 @@ function ViewOrderMain({ id, order = {}, isLoading }:any) {
 
     return (
         <Box w='100%'>
-            <PageHeading title="Order Detail">
+            <PageHeading title="Order Detail" isLoading={isLoading}>
                 <Button 
                     text='Back'
                     iconType="back"
@@ -57,10 +62,7 @@ function ViewOrderMain({ id, order = {}, isLoading }:any) {
                     text='Assign Dispatch Agent '
                     variant='outline'
                     color={'#0E2354'}
-                />
-                <Button 
-                    text='Print Invoice'
-                    bgColor={'#101828'}
+                    onClick={onOpen}
                 />
                 <Button 
                     isLoading={isPending}
@@ -86,10 +88,9 @@ function ViewOrderMain({ id, order = {}, isLoading }:any) {
             <Table
                 title="Order Timeline & Logs"
                 tableFields={dataFields}
-                tableData={[]}
+                tableData={order?.timeline_logs ?? []}
                 emptyText={'No data found'}
-                loading={false}
-                numbered
+                loading={isLoading}
             />
 
             <ConfirmModal
@@ -114,6 +115,34 @@ function ViewOrderMain({ id, order = {}, isLoading }:any) {
                 isOpen={isCancelled}
                 onConfirm={() => handleStatus("Cancelled")}
                 onClose={closeCancelled}
+            />
+
+            <ModalCenter 
+                isOpen={isOpen}
+                onClose={onClose}
+                body={
+                    <Box>
+                        <PageHeading 
+                            titleSize="18px" 
+                            title="Assign a Dispatch Agent" 
+                            subHeading="Select one dispatch agent to assign to this role"
+                        />
+                        <FilterInput placeholder="Search for a dispatch agent" leftElement={<BsSearch />}/>
+                        
+                        <Stack mt={8} mb={4} spacing={4}>
+                            <WithAvatar datum={'Dispatch Agent 3'} sub="Dispatch Agent" />
+                            <WithAvatar datum={'Dispatch Agent 2'} sub="Dispatch Agent" />
+                            <WithAvatar datum={'Dispatch Agent 1'} sub="Dispatch Agent" />
+                        </Stack>
+                    </Box>
+                }
+                footer={
+                    <Button 
+                        text="Assign"
+                        size={'md'}
+                        w='100%'
+                    />
+                }
             />
 
         </Box>

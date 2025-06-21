@@ -18,7 +18,7 @@ import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import { MdPayments, MdLogout } from "react-icons/md";
 import { IoMdMenu } from "react-icons/io";
 import { TbCheckbox, TbUsers } from "react-icons/tb";
-import { ImCross } from "react-icons/im";
+// import { ImCross } from "react-icons/im";
 import { IconType } from "react-icons";
 
 import logo from '../assets/icon/logo.png'
@@ -274,7 +274,8 @@ function AuthLayoutMain () {
                                 onClick={() => navigate('/')}
                             />
                             <Box cursor={'pointer'}>
-                                {isOpen ? <ImCross onClick={onClose} /> : <IoMdMenu size={30} onClick={onOpen}/> }
+                                {/* {isOpen ? <ImCross onClick={onClose} /> : <IoMdMenu size={30} onClick={onOpen}/> } */}
+                                <IoMdMenu size={30} onClick={onOpen}/>
                             </Box>
                         </HStack>
                     }

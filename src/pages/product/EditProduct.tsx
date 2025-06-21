@@ -9,19 +9,50 @@ import { useCustomFormState } from "../../hooks/useCustomFormState";
 import { useGetProduct, useUpdateProduct } from "../../service/product/productHook";
 import Form from "../../common/Form/Form";
 import { isObjectPropsEmpty } from "../../utils/utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Notify from "../../utils/notify";
+import { useCreateProductImage, useDeleteProductImage } from "../../service/product/images";
 
 export default function EditProduct() {
 
     const navigate = useNavigate()
+    const [tags, setTags] = useState("")
     const { id } = useParams<{ id: string; }>();
+
+    const [images, setImages] = useState<File[] | string[]>([]);
+
+    const { mutateAsync: deleteImageAction, isPending: deleteLoad } = useDeleteProductImage()
+    const handleRemove = async (index: number, imgId:any) => {
+        console.log('clicked on delete image', imgId)
+        try{
+            const res:any = await deleteImageAction({id: imgId})
+
+            const updated:any = [...images];
+            updated.splice(index, 1);
+            setImages(updated);
+
+            Notify.success("Deleted")
+            return res
+        } catch(e:any){ Notify.error(e?.message ?? "Failed"); return e }
+
+    };
+
+    const { mutateAsync: imageAction, isPending: imagePend } = useCreateProductImage()
+    const handleImageUpload = async() => {
+        try{
+            const res:any = await imageAction([id, {image: images}])
+            Notify.success("Image(s) Uploaded")
+            navigate(`/main/product-management`)
+            return res
+        } catch(e:any){ Notify.error(e?.message ?? "Failed"); return e }
+    }
 
     const { data: product = {}, isLoading } = useGetProduct(id)
     const { mutateAsync } = useUpdateProduct()
     const handleSubmit = async (data:any) => {
+        const arrayTag = tags?.split(", ")?.map(item => item?.trim())
         try {
-            const payload : any = await mutateAsync({...data});
+            const payload : any = await mutateAsync({...data, tags: arrayTag});
             Notify.success("Success")
             navigate(`/main/product-management`)
 
@@ -39,7 +70,14 @@ export default function EditProduct() {
         onChange(name, value, type)
     }
 
-    useEffect(() => { if(!isLoading) { setFormData({...product?.data}) } }, [isLoading])
+    useEffect(() => { 
+    if(!isLoading) { 
+        setFormData({...product?.data}); 
+        const tagsArr = product?.data?.tags?.map((e:any) => e.name)
+        setTags(tagsArr?.join(", ")) //tags handling
+
+        setImages(product?.data?.images) //image handling
+    } }, [isLoading])
 
     return (
         <PageMainContainer title="Production Management" description="Production Management">
@@ -55,7 +93,7 @@ export default function EditProduct() {
                         text='Back'
                         iconType="back"
                         bgColor={'gray'}
-                        onClick={() => navigate(`/main/product-management`)}
+                        onClick={() => navigate(-1)}
                     />
                     <Button 
                         text='Cancel'
@@ -78,10 +116,19 @@ export default function EditProduct() {
                 <Box px={[0,0,0,4]} mt={8}>
                     <ProductForm 
                         edit
+                        tags={tags}
                         data={data}
                         errors={errors}
+                        images={images}
+                        setTags={setTags}
                         onChange={onChange}
+                        setImages={setImages}
                         controller={controller}
+                        uploadLoad={imagePend}
+                        deleteLoad={deleteLoad}
+                        handleDelete={handleRemove}
+                        handleUpload={handleImageUpload}
+                        isImageExisted={product?.data?.images?.length > 0}
                     />
                 </Box>
             </Form>

@@ -1,17 +1,18 @@
 import { Grid, GridItem, HStack, Stack, Text } from "@chakra-ui/react";
-import { prettyDateFormat } from "../../../utils/utils";
+import { allCaps, prettyDateFormat } from "../../../utils/utils";
 
-function OrderText({title, value}:any) {
+export function OrderText({title, value, w, fs}:any) {
     return (
-        <HStack align={'flex-start'} spacing={2} fontSize={'sm'}>
-            <Text w={'30%'} color={'#101828'}>{title}</Text>
-            <Text color={'#475467'}>{value}</Text>
+        <HStack align={'flex-start'} spacing={2} fontSize={fs ?? 'sm'}>
+            <Text w={w ?? '30%'} color={'#101828'}>{title}</Text>
+            <Text w='100%' color={'#475467'}>{value}</Text>
         </HStack>
     )
 }
 
 export default function Descriptions({data = {}}:any) {
-    const splittedTags = data?.tags?.join(", ");
+    const tagsArr = data?.tags?.map((e:any) => e.name)
+    const splittedTags = tagsArr?.join(", ");
 
     return (
             <Grid
@@ -19,13 +20,13 @@ export default function Descriptions({data = {}}:any) {
                 templateColumns={{ base: "1fr", sm: "1fr", md: "1fr", lg: "1fr 2fr" }} 
             >
                 <GridItem>
-                    <Stack spacing={0}>
-                        <OrderText title="Publication Date:" value={prettyDateFormat(data?.publication_date) ?? ""}/>
-                        <OrderText title="Unit of Measurement:" value={data?.unit_of_measure ?? ""}/>
-                        <OrderText title="Tags:" value={splittedTags ?? ""}/>
-                        <OrderText title="Specifications:" value={data?.specifications}/>
-                        <OrderText title="Custom Attributes:" value={data?.custom_attributes ?? ""}/>
-                        <OrderText title="SEO Title:" value={data?.seo_title ?? ""}/>
+                    <Stack spacing={2}>
+                        <OrderText w={['80%','40%','40%','80%']} title="Publication Date:" value={prettyDateFormat(data?.publication_date) ?? ""}/>
+                        <OrderText w={['80%','40%','40%','80%']} title="Unit of Measurement:" value={allCaps(data?.unit_of_measure) ?? ""}/>
+                        <OrderText w={['80%','40%','40%','80%']} title="Tags:" value={splittedTags ?? ""}/>
+                        <OrderText w={['80%','40%','40%','80%']} title="Specifications:" value={data?.specifications}/>
+                        <OrderText w={['80%','40%','40%','80%']} title="Custom Attributes:" value={data?.custom_attributes ?? ""}/>
+                        <OrderText w={['80%','40%','40%','80%']} title="SEO Title:" value={data?.seo_title ?? ""}/>
                         {/* <OrderText title="SEO Description:" value={data?.seo_description ?? ""}/> */}
                     </Stack>
                 </GridItem>

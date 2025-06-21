@@ -119,3 +119,40 @@ export function formAltController(name: string, value: any, type: string, setDat
             setData((prev: any) => ({ ...prev, [name]: capCased ? capCase(value) : value }));
     }
 }
+
+export function formatDateDifference(start: string | Date, end: string | Date): string {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    let years = endDate.getFullYear() - startDate.getFullYear();
+    let months = endDate.getMonth() - startDate.getMonth();
+    let days = endDate.getDate() - startDate.getDate();
+
+    // Adjust for negative days
+    if (days < 0) {
+        months -= 1;
+        const temp = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+        days += temp.getDate();
+    }
+
+    // Adjust for negative months
+    if (months < 0) {
+        years -= 1;
+        months += 12;
+    }
+
+    // Handle weeks and remaining days
+    let weeks = 0;
+    if (years === 0 && months === 0) {
+        weeks = Math.floor(days / 7);
+        days = days % 7;
+    }
+
+    const parts: string[] = [];
+    if (years) parts.push(`${years} year${years > 1 ? "s" : ""}`);
+    if (months) parts.push(`${months} month${months > 1 ? "s" : ""}`);
+    if (weeks) parts.push(`${weeks} week${weeks > 1 ? "s" : ""}`);
+    if (days) parts.push(`${days} day${days > 1 ? "s" : ""}`);
+
+    return parts.length > 0 ? parts.join(", ") : "0 days";
+}

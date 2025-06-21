@@ -9,15 +9,17 @@ import { useNavigate } from 'react-router'
 import { useGetAuthState } from '../../service/auth/authHook'
 import { useGetDashboardStats } from '../../service/dashboardHook'
 import { formatNumberToShortForm } from '../../utils/utils'
+import { useGetOrders } from '../../service/order/orderHook'
 
-const dataFields = [  
-    { name: 'Order', key: 'order', idChange: true},   
-    { name: 'Order Date', key: 'date', date: true }, 
-    { name: 'Payment Status', key: 'status'},
-    { name: 'Customer', key: 'name', img: 'img', withImg: true },   
-    { name: 'Products Ordered', key: 'ordered'},
-    { name: 'Shipment Status', key: 'shipmentStatus' },
-    { name: 'Total Amount (₦)', key: 'amount', money: true },
+const dataFields = [
+    { name: 'Order Number', key: 'number', },    
+    { name: 'Order Date', key: 'created_at', date: true},   
+    { name: 'Payment Mode', key: 'payment_mode', case: true}, 
+    { name: 'Payment Status', key: 'payment_status', case: true},
+    { name: 'Total Amount (₦)', key: 'total_fee', money: true },
+    // { name: 'Products Ordered', key: 'product', case: true }, 
+    { name: 'Order Status', key: 'status'},
+    { name: 'Delivery Method', key: 'delivery_method'},
 ]
 
 export default function Dashboard() {
@@ -27,6 +29,10 @@ export default function Dashboard() {
     const { user } = useGetAuthState()
     const { data: statData = {}, isLoading: statLoad} = useGetDashboardStats({})
     const { data: stats = {} } = statData;
+
+    const { data: initData = {}, isLoading: orderLoad } = useGetOrders({})
+    const { data: orderData = {} } = initData
+    const orders:any[] = orderData?.data
 
     const addProduct = () => { navigate(`/main/product-management/add`) }
 
@@ -59,11 +65,11 @@ export default function Dashboard() {
                 </Box>
 
                 <Table
+                    title='Recent Orders'
                     tableFields={dataFields}
-                    tableData={[]}
+                    tableData={orders}
                     emptyText={'No data found'}
-                    loading={false}
-                    numbered
+                    loading={orderLoad}
                 />
             </Box>
         </PageMainContainer>

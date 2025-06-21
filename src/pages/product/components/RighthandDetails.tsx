@@ -2,7 +2,8 @@ import { Badge, Divider, Flex, HStack, IconButton, Image, Tag, Text, VStack } fr
 import { ElementColor, TextColor } from '../../../constants/colors'
 import Rating from '../../../common/Form/Rating'
 import { FaFacebookF, FaInstagram, FaPinterestP, FaTwitter } from 'react-icons/fa'
-import { allLower, capCase, formatNumberToShortForm, moneyFormat } from '../../../utils/utils'
+import { capCase, formatNumberToShortForm, moneyFormat } from '../../../utils/utils'
+import StatusChanger from '../../../common/Table/StatusChanger'
 
 export default function RighthandDetails({
     data = {}
@@ -19,11 +20,11 @@ export default function RighthandDetails({
         >
             <HStack>
                 <Text color={TextColor.heading} fontSize={'26px'} fontWeight={600}>{capCase(data?.name) ?? ""}</Text>
-                <Badge bgColor={'#03723D33'} color={'#03723D'} px={2} py={1} borderRadius={'4px'}>{data?.availablity ?? "In Stock"}</Badge>
+                <Badge bgColor={'#03723D33'} color={'#03723D'} px={2} py={1} borderRadius={'4px'}>{Number(data?.quantity) <= 0 ? "Out of Stock" : "In Stock" }</Badge>
             </HStack>
 
             <Flex mt={'5px'}>
-                <Rating rating={data?.ratings_avg_rating ?? 0} dot/>
+                <Rating rating={Number(data?.ratings_avg_rating) ?? 0} dot/>
                 <Text fontSize="sm">SKU: {data?.sku ?? ""}</Text>
             </Flex>
 
@@ -60,7 +61,8 @@ export default function RighthandDetails({
                 <HStack><Text color={'#101828'}>Quantity:</Text> <p>{formatNumberToShortForm(data?.quantity ?? 0, 5) ?? "0"}</p></HStack>
                 <HStack>
                     <Text color={'#101828'}>Stock Status:</Text> 
-                    {allLower(data?.status) === 'active' ? <Tag size={'sm'} colorScheme='whatsapp' py={1} px={2} color={'#027A48'}>{data?.status}</Tag> : <Tag size={'sm'} colorScheme='red' py={1} px={2} color={'#F15046'}>{"Inactive"}</Tag>} 
+                    <StatusChanger datum={data?.status}/>
+                    {/* {allLower(data?.status) === 'active' ? <Tag size={'sm'} colorScheme='whatsapp' py={1} px={2} color={'#027A48'}>{data?.status}</Tag> : <Tag size={'sm'} colorScheme='red' py={1} px={2} color={'#F15046'}>{"Inactive"}</Tag>}  */}
                 </HStack>
                 <HStack><Text color={'#101828'}>Category:</Text> <p>{data?.category?.name ?? ""}</p></HStack>
             </VStack> 

@@ -1,7 +1,9 @@
-import { Box, HStack, Stack, Text } from "@chakra-ui/react";
+import { Box, HStack, Skeleton, Stack, Text } from "@chakra-ui/react";
 import Rating from "../../../common/Form/Rating";
+import EmptyListHero from "../../../common/Hero/EmptyListHero";
+import { prettyDateFormat } from "../../../utils/utils";
 
-export default function CustomerReviews() {
+export default function CustomerReviews({ isLoading, reviews = [] }: { isLoading: boolean; reviews: any[] }) {
     return (
         <Box
             p={4}
@@ -10,27 +12,29 @@ export default function CustomerReviews() {
             borderRadius={'16px'}
         >
             <Text fontSize={'16px'} color={'#101828'} fontWeight={500} mb={6}>Customer Reviews</Text>
-            <Stack spacing={4} pb={4}>
-                <Box p={3} boxShadow={'lg'}>
-                    <HStack w='100%' justify={'space-between'}>
-                        <Text color={'#344054'} fontSize={'14px'}>Alice Green</Text>
-                        <Rating rating={5} />
-                    </HStack>
+            {isLoading ? <Skeleton borderRadius={'md'} h={'80px'} w='100%' /> :
+            <Stack 
+                spacing={4} 
+                pb={4}
+                h={'260px'}
+                overflowY={'scroll'}
+                className="scroll-custom"
+            >
+                {reviews?.length <=0 ? <EmptyListHero text="No reviews available"/> :
+                    reviews?.map((review:any, i:any) => (
+                        <Box key={i} p={3} boxShadow={'lg'}>
+                            <HStack w='100%' justify={'space-between'} mb={2}>
+                                <Text color={'#344054'} fontSize={'14px'}>{review?.user?.name ?? ""}</Text>
+                                <Rating rating={Number(review?.rating ?? 0)} />
+                            </HStack>
 
-                    <Text color={'#475467'} fontSize={'12px'}>Excellent germination rate! All varieties grew beautifully.</Text>
-                    <Text color={'#475467'} fontSize={'12px'}>May 20, 2024</Text>
-                </Box>
+                            <Text color={'#475467'} fontSize={'12px'}>{review?.comment ?? ""}</Text>
+                            <Text color={'#475467'} fontSize={'12px'}>{prettyDateFormat(review?.created_at) ?? ""}</Text>
+                        </Box>
+                    ))}
 
-                <Box p={3} boxShadow={'lg'}>
-                    <HStack w='100%' justify={'space-between'}>
-                        <Text color={'#344054'} fontSize={'14px'}>Tom Parker</Text>
-                        <Rating rating={3.5} />
-                    </HStack>
-
-                    <Text color={'#475467'} fontSize={'12px'}>Great selection of seeds. The Cherokee Purple variety was outstanding.</Text>
-                    <Text color={'#475467'} fontSize={'12px'}>May 18, 2024</Text>
-                </Box>
-            </Stack>
+            </Stack> 
+            }
         </Box>
     )
 }

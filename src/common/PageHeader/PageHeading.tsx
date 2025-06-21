@@ -44,7 +44,7 @@ function PageHeading({ title, subHeading, titleSize, fontSize, children, color, 
                 </HStack>
             }
             {children &&
-                <HStack {...childrenProps}>
+                <HStack {...childrenProps} className='scroll-custom'>
                     {children}
                 </HStack>
             }

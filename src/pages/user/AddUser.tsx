@@ -10,15 +10,35 @@ import Notify from "../../utils/notify";
 import { useCustomFormState } from "../../hooks/useCustomFormState";
 import Form from "../../common/Form/Form";
 import { isObjectPropsEmpty } from "../../utils/utils";
+import { useState } from "react";
 
 export default function AddUser() {
 
     const navigate = useNavigate()
 
+    const [ file, setFileData ] = useState({ 
+        file: null 
+    } as any)
+
+    const setFile = (file: any) => {
+        if (file && file.type.startsWith('image/')) {
+            setFileData((prev:any) => ({...prev, file: file, documentName: file?.name }));
+        } else {
+            // Notify the user about the invalid file type
+            Notify.error('Invalid image type. Allowed types: JPEG, PNG, GIF');
+            setFileData((prev:any) => ({...prev, file: null }));
+        }
+    }
+    
     const { mutateAsync } = useCreateUser()
     const handleSubmit = async (data:any) => {
         try {
-            const payload : any = await mutateAsync({...data});
+            const payload : any = await mutateAsync({
+                ...data,
+                image: file?.file,
+                sms_notification: data?.sms_notification == true ? 1 : 0,
+                email_notification: data?.email_notification == true ? 1 : 0
+            });
             Notify.success("Success")
             navigate(`/main/user-management`)
 
@@ -28,7 +48,7 @@ export default function AddUser() {
         }
     }
 
-    const { data, onChange, formState, clearFormData, formAction } = useCustomFormState(handleSubmit, {})
+    const { data, onChange, formState, clearFormData, formAction } = useCustomFormState(handleSubmit, {email_notification: false, sms_notification: false})
     const errors = formState.errors
 
     const controller: any = (e: any) => {
@@ -66,6 +86,7 @@ export default function AddUser() {
                     <UserForm 
                         data={data}
                         errors={errors}
+                        setFile={setFile}
                         onChange={onChange}
                         controller={controller}
                     />

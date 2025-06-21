@@ -1,18 +1,18 @@
 import { Box, Flex, HStack } from '@chakra-ui/react'
-import Tabs from '../../common/Tabs/Tabs'
 import PageHeading from '../../common/PageHeader/PageHeading'
 import Button from '../../common/Button/Button'
 import { useState } from 'react'
-import { Input } from '../../common/Form/Input'
 import { BsSearch } from 'react-icons/bs'
 import { Table } from '../../common/Table/Table'
 import PageMainContainer from '../../common/PageMain/PageMain'
 import { useNavigate } from 'react-router'
 import { useGetUsers } from '../../service/user/userHook'
 import Pagination from '../../common/Pagination/Pagination'
+import FilterTab from '../../common/Tabs/FilterTab'
+import FilterInput from '../../common/Form/FilterInput'
 
 const dataFields = [
-    { name: 'Name', key: 'name', img: 'img', withImg: true },    
+    { name: 'Name', key: 'name', img: 'image_url', withImg: true },    
     { name: 'User ID', key: 'id', idChange: true},
     { name: "Username", key: "username", case: true },    
     { name: 'Email', key: 'email', lower: true},
@@ -32,10 +32,17 @@ function UserTable ({
 }:any) {
 
     const navigate = useNavigate()
+    const [search, setSearch] = useState("")
 
     const changePage = ({ selected = 0 }) => {
         setFilter({ ...filter, page: selected + 1 });
     }
+
+    const onFilter = () => {
+        setFilter({ ...filter, search_query: search });
+    }
+
+    const resetFilter = () => { setFilter({}) }
 
     const editUser = (datum:any) => { navigate(`/main/user-management/edit/${datum?.id}`) }
 
@@ -44,25 +51,31 @@ function UserTable ({
             <Box overflowX="auto">
                 <Flex direction={{ base: "row", md: "row" }} gap={4} mb={4}>
                     <Flex flex="1" gap={2}>
-                        <Input 
-                            name="search"
-                            value={filter?.search}
-                            placeholder="Search users by name, role, ID or any related keywords" 
+                        <FilterInput 
+                            placeholder="Search users by name, username, email, phone or any related keywords" 
+                            onChange={(e:any) => setSearch(e.target.value)}
                             leftElement={(<BsSearch />)}
                         />
                     </Flex>
                     <Flex gap={2}>
+                        <Button 
+                            size={'md'}
+                            iconType='reset'
+                            bgColor={'gray.400'}
+                            color={'white'}
+                            onClick={resetFilter}
+                        />
                         <Button 
                             text='Filter'
                             size={'md'}
                             iconType='filter'
                             variant='outline'
                             color={'#344054'}
+                            onClick={onFilter}
                         />
                     </Flex>
                 </Flex>
             </Box>
-
 
             <Table
                 tableFields={dataFields}
@@ -75,11 +88,11 @@ function UserTable ({
                         name: 'Edit',
                         onUse: (datum: any) => { editUser(datum) },
                     },
-                    {
-                        name: 'Delete',
-                        color: 'red.500',
-                        onUse: (datum: any) => { },
-                    },
+                    // {
+                    //     name: 'Delete',
+                    //     color: 'red.500',
+                    //     onUse: (datum: any) => { },
+                    // },
                 ]}
             />
 
@@ -99,10 +112,12 @@ export default function User() {
     const [filter, setFilter] = useState<any>({})
 
     const { data: initData = {}, isLoading } = useGetUsers(filter)
-    const { data: userData = {} } = initData
-    const users:any[] = userData?.data
+    const { data: users = [] } = initData
+    // const users:any[] = userData?.data
 
     const addUser = () => { navigate(`/main/user-management/add`) }
+
+    const headings = ["All User", "Customer", "Administrator"]
 
     return (
         <PageMainContainer title="User Management" description="User Management">
@@ -123,21 +138,39 @@ export default function User() {
                     </HStack>
                 </PageHeading>
 
-                <Tabs 
-                    headings={["All User", "Customer", "Administrator"]}
-                    panels={[
-                        <UserTable 
-                            users={users}
-                            filter={filter} 
-                            setFilter={setFilter}
-                            isLoading={isLoading}
-                            currentPage={userData?.current_page}
-                            totalPages={userData?.total}
-                        />,
-                        <></>,
-                        <></>,
-                    ]}
+                <HStack
+                    px={0}
+                    pb={0}
+                    mb={2}
+                    overflowX="auto"
+                    className="scroll-custom"
+                    borderBottom="1px solid #EAECF0"
+                >
+                    {headings.map((head, index) => {
+                        const isActive = (head === "All User" && !filter?.role) || filter?.role === head;
+                        return (
+                            <FilterTab 
+                                key={index}
+                                head={head}
+                                isActive={isActive}
+                                firstValue="All User"
+                                setFilter={setFilter}
+                                filterWith={{ role: head }}
+                            />
+                        );
+                    })}
+
+                </HStack>
+
+                <UserTable 
+                    users={users}
+                    filter={filter} 
+                    setFilter={setFilter}
+                    isLoading={isLoading}
+                    currentPage={initData?.current_page ?? 1}
+                    totalPages={initData?.total ?? 6}
                 />
+
             </Box>
         </PageMainContainer>
     )

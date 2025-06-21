@@ -10,16 +10,29 @@ import { useNavigate } from "react-router";
 import { isObjectPropsEmpty } from "../../utils/utils";
 import { useCreateProduct } from "../../service/product/productHook";
 import Notify from "../../utils/notify";
+import { useState } from "react";
 
 export default function AddProduct() {
 
     // category_id: "01jxjs12k9g9cr3mgtx7p68pt6"
     const navigate = useNavigate()
+    const [tags, setTags] = useState("")
+
+    const [images, setImages] = useState<File[] | string[]>([]);
+
+    // const handleRemove = (index: number) => {
+    //     const updated:any = [...images];
+    //     updated.splice(index, 1);
+    //     setImages(updated);
+    // };
+
+    // console.log(images)
 
     const { mutateAsync } = useCreateProduct()
     const handleSubmit = async (data:any) => {
+        const arrayTag = tags?.split(", ")?.map(item => item?.trim())
         try {
-            const payload : any = await mutateAsync({...data, category_id: "01jxjs12k9g9cr3mgtx7p68pt6"});
+            const payload : any = await mutateAsync({...data, tags: arrayTag});
             Notify.success("Success")
             navigate(`/main/product-management`)
 
@@ -69,10 +82,15 @@ export default function AddProduct() {
 
                 <Box px={[0,0,0,4]} mt={8}>
                     <ProductForm 
+                        tags={tags}
                         data={data}
                         errors={errors}
+                        images={images}
+                        setTags={setTags}
                         onChange={onChange}
+                        setImages={setImages}
                         controller={controller}
+                        // handleDelete={handleRemove}
                     />
                 </Box>
                 
