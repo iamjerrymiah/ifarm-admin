@@ -12,18 +12,22 @@ import { isObjectPropsEmpty } from "../../utils/utils";
 import { useEffect, useState } from "react";
 import Notify from "../../utils/notify";
 import { useCreateProductImage, useDeleteProductImage } from "../../service/product/images";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function EditProduct() {
 
     const navigate = useNavigate()
+    const queryClient = useQueryClient();
+
     const [tags, setTags] = useState("")
     const { id } = useParams<{ id: string; }>();
 
-    const [images, setImages] = useState<File[] | string[]>([]);
+    const [images, setImages] = useState<any[]>([]);
+    const onlyFiles = images?.filter((item): item is File => item instanceof File);
+    // const onlyObjects = images.filter((item): item is UploadedImage => !(item instanceof File));
 
     const { mutateAsync: deleteImageAction, isPending: deleteLoad } = useDeleteProductImage()
     const handleRemove = async (index: number, imgId:any) => {
-        console.log('clicked on delete image', imgId)
         try{
             const res:any = await deleteImageAction({id: imgId})
 
@@ -31,18 +35,19 @@ export default function EditProduct() {
             updated.splice(index, 1);
             setImages(updated);
 
+            queryClient.invalidateQueries({ queryKey: ['products'] });
             Notify.success("Deleted")
             return res
         } catch(e:any){ Notify.error(e?.message ?? "Failed"); return e }
-
     };
 
     const { mutateAsync: imageAction, isPending: imagePend } = useCreateProductImage()
     const handleImageUpload = async() => {
+        const payload = {'images[]': onlyFiles};
         try{
-            const res:any = await imageAction([id, {image: images}])
+            const res:any = await imageAction([id, payload])
             Notify.success("Image(s) Uploaded")
-            navigate(`/main/product-management`)
+            queryClient.invalidateQueries({ queryKey: ['products'] });
             return res
         } catch(e:any){ Notify.error(e?.message ?? "Failed"); return e }
     }
@@ -54,12 +59,11 @@ export default function EditProduct() {
         try {
             const payload : any = await mutateAsync({...data, tags: arrayTag});
             Notify.success("Success")
+            queryClient.invalidateQueries({ queryKey: ['products'] });
             navigate(`/main/product-management`)
 
             return payload;
-        } catch(e:any) {
-            return e
-        }
+        } catch(e:any) { return e; }
     }
 
     const { data, onChange, formState, setFormData, clearFormData, formAction } = useCustomFormState(handleSubmit, product?.data)

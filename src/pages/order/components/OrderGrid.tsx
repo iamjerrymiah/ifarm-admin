@@ -87,7 +87,7 @@ export default function OrderGrid ({data}:any){
                         <Flex direction={['column', 'row']} gap={[4,8]} fontSize={'13px'} w='100%' justify={'space-between'}>
                             <Box pl={[0,5]} w='100%'>
                                 <Stack spacing={0} mb={3} >
-                                    <OrderText fs='11px' w={['40%', '30%']} title="Payment Mode:" value={capCase(data?.payment_mode) ?? ""}/>
+                                    <OrderText fs='11px' w={['40%', '30%']} title="Payment Method:" value={capCase(data?.payment_method) ?? ""}/>
                                     <OrderText fs='11px' w={['40%', '30%']} title="Delivery Method:" value={capCase(data?.delivery_method, "_") ?? ""}/>
                                     <OrderText fs='11px' w={['40%', '30%']} title="Delivery Address:" value={capCase(data?.delivery_address) ?? ""}/>
                                 </Stack>

@@ -7,7 +7,7 @@ const key = 'products';
 export const useGetProducts = (params:any) => {
     let queries = !!params ? queryString.stringify(params) : '';
     return useQuery({
-        queryKey: [key, params, "products-images"],
+        queryKey: [key, params],
         queryFn: async () => {
             const res: any = await fetcher(`/products?${queries}`);
             return res;
@@ -17,7 +17,7 @@ export const useGetProducts = (params:any) => {
 
 export const useGetProduct = (id: any) => {
     return useQuery({
-        queryKey: [key, id, "products-images"],
+        queryKey: [key, id],
         queryFn: async () => {
             const res: any = await fetcher(`/products/${id}`);
             return res;

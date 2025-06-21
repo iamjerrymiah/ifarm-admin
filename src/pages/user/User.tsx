@@ -112,8 +112,8 @@ export default function User() {
     const [filter, setFilter] = useState<any>({})
 
     const { data: initData = {}, isLoading } = useGetUsers(filter)
-    const { data: users = [] } = initData
-    // const users:any[] = userData?.data
+    const { data: userData = [] } = initData
+    const users:any[] = userData?.data
 
     const addUser = () => { navigate(`/main/user-management/add`) }
 
@@ -167,8 +167,8 @@ export default function User() {
                     filter={filter} 
                     setFilter={setFilter}
                     isLoading={isLoading}
-                    currentPage={initData?.current_page ?? 1}
-                    totalPages={initData?.total ?? 6}
+                    currentPage={userData?.current_page ?? 1}
+                    totalPages={userData?.total ?? 6}
                 />
 
             </Box>

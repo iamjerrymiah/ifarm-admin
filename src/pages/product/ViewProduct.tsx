@@ -47,7 +47,7 @@ const mockData = {
 const dataFields = [
     { name: 'Order Number', key: 'number', },    
     { name: 'Order Date', key: 'created_at', date: true},   
-    { name: 'Payment Mode', key: 'payment_mode', case: true}, 
+    { name: 'Payment Method', key: 'payment_method', case: true}, 
     { name: 'Payment Status', key: 'payment_status', case: true},
     { name: 'Total Amount (₦)', key: 'total_fee', money: true },
     // { name: 'Products Ordered', key: 'product', case: true }, 
@@ -114,10 +114,10 @@ function ViewProductMain ({ id, product = {}, isLoading, orderData = {}, orderLo
             >
                 <GridItem>
                     <LefthandImagery
-                        // mainImage={imageUrls[selectedIndex] ?? imag} 
-                        // thumbnails={imageUrls ?? thumbnails}
-                        mainImage={thumbnails[selectedIndex]}
-                        thumbnails={thumbnails}
+                        mainImage={imageUrls[selectedIndex] ?? imag} 
+                        thumbnails={imageUrls ?? thumbnails}
+                        // mainImage={thumbnails[selectedIndex]}
+                        // thumbnails={thumbnails}
                         selectedIndex={selectedIndex}
                         setSelectedIndex={setSelectedIndex}
                     />

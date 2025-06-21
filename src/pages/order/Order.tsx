@@ -15,7 +15,7 @@ import FilterInput from '../../common/Form/FilterInput'
 const dataFields = [
     { name: 'Order Number', key: 'number', },    
     { name: 'Order Date', key: 'created_at', date: true},   
-    { name: 'Payment Mode', key: 'payment_mode', case: true}, 
+    { name: 'Payment Method', key: 'payment_method', case: true}, 
     { name: 'Payment Status', key: 'payment_status', case: true},
     // { name: 'Customer', key: 'customer', img: 'img', withImg: true },
     { name: 'Amount (₦)', key: 'total_amount', money: true },

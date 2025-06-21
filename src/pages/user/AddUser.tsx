@@ -36,8 +36,8 @@ export default function AddUser() {
             const payload : any = await mutateAsync({
                 ...data,
                 image: file?.file,
-                sms_notification: data?.sms_notification == true ? 1 : 0,
-                email_notification: data?.email_notification == true ? 1 : 0
+                enable_sms_notification: data?.enable_sms_notification == true ? 1 : 0,
+                enable_email_notification: data?.enable_email_notification == true ? 1 : 0
             });
             Notify.success("Success")
             navigate(`/main/user-management`)
@@ -48,7 +48,7 @@ export default function AddUser() {
         }
     }
 
-    const { data, onChange, formState, clearFormData, formAction } = useCustomFormState(handleSubmit, {email_notification: false, sms_notification: false})
+    const { data, onChange, formState, clearFormData, formAction } = useCustomFormState(handleSubmit, {})
     const errors = formState.errors
 
     const controller: any = (e: any) => {

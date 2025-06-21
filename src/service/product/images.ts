@@ -5,7 +5,7 @@ const key = 'products-images'
 
 export const useGetProductImages = (id: any) => {
     return useQuery({
-        queryKey: [key, id, "products"],
+        queryKey: [key, id],
         queryFn: async () => {
             const res: any = await fetcher(`/products/images/${id}`);
             return res;
@@ -21,7 +21,7 @@ export const useCreateProductImage = () => {
             return customFormdataMutationRequest(`/products/images/${data[0]}`, 'POST', data[1]).then((res:any) => res)
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [key, "products"] });
+            queryClient.invalidateQueries({ queryKey: [key] });
         },
     });
 };
@@ -33,7 +33,7 @@ export const useDeleteProductImage = () => {
             return deleteRequest(`/products/images/${data?.id}`).then((res:any) => res)
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [key, "products"] });
+            queryClient.invalidateQueries({ queryKey: [key] });
         },
     });
 };

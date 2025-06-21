@@ -213,7 +213,7 @@ export default function ProductForm({
                     />
                     <Switch 
                         rightLabel="Featured Product"
-                        subLabel="Checkbox to mark as “Featured” on the storefront."
+                        subLabel="Toggle to mark as “Featured” on the storefront."
                         name="is_featured"
                         value={data?.is_featured}
                         onChange={controller}

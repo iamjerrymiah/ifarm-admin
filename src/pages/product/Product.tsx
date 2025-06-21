@@ -16,7 +16,7 @@ import { useConfirmAction } from '../../hooks/useActions';
 import ConfirmModal from '../../common/Modal/ConfirmModal';
 
 const dataFields = [
-    { name: 'Product Name', key: 'name', img: 'img_url', withImg: true },    
+    { name: 'Product Name', key: 'name', img: 'default_image', withImg: true },    
     // { name: 'Product ID', key: 'id', idChange: true},    
     { name: 'Product SKU/ID', key: 'sku', idChange: true },
     { name: 'Stock', key: 'quantity', numShortForm: true},
@@ -146,6 +146,8 @@ export default function Product() {
     const { data: initData = {}, isLoading } = useGetProducts(filter)
     const { data: productData = {} } = initData
     const products:any[] = productData?.data
+
+    console.log(products)
 
     const { data: categoryData = {}, isLoading: catLoad } = useGetCategories({})
     const { data: categories = [] } = categoryData;

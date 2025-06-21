@@ -11,13 +11,15 @@ import { isObjectPropsEmpty } from "../../utils/utils";
 import { useCreateProduct } from "../../service/product/productHook";
 import Notify from "../../utils/notify";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddProduct() {
 
     // category_id: "01jxjs12k9g9cr3mgtx7p68pt6"
     const navigate = useNavigate()
-    const [tags, setTags] = useState("")
+    const queryClient = useQueryClient();
 
+    const [tags, setTags] = useState("")
     const [images, setImages] = useState<File[] | string[]>([]);
 
     // const handleRemove = (index: number) => {
@@ -34,8 +36,8 @@ export default function AddProduct() {
         try {
             const payload : any = await mutateAsync({...data, tags: arrayTag});
             Notify.success("Success")
+            queryClient.invalidateQueries({ queryKey: ['products'] });
             navigate(`/main/product-management`)
-
             return payload;
         } catch(e:any) {
             return e

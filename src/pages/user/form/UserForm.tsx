@@ -168,14 +168,14 @@ export default function UserForm({
                 <Box>
                     <Switch 
                         label="Email Notifications"
-                        name="email_notification"
-                        value={data?.email_notification}
+                        name="enable_email_notification"
+                        value={data?.enable_email_notification}
                         onChange={controller}
                     />
                     <Switch 
                         label="SMS Notifications"
-                        name="sms_notification"
-                        value={data?.sms_notification}
+                        name="enable_sms_notification"
+                        value={data?.enable_sms_notification}
                         onChange={controller}
                     />
                 </Box>
