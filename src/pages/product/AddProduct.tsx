@@ -15,20 +15,11 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddProduct() {
 
-    // category_id: "01jxjs12k9g9cr3mgtx7p68pt6"
     const navigate = useNavigate()
     const queryClient = useQueryClient();
 
     const [tags, setTags] = useState("")
     const [images, setImages] = useState<File[] | string[]>([]);
-
-    // const handleRemove = (index: number) => {
-    //     const updated:any = [...images];
-    //     updated.splice(index, 1);
-    //     setImages(updated);
-    // };
-
-    // console.log(images)
 
     const { mutateAsync } = useCreateProduct()
     const handleSubmit = async (data:any) => {

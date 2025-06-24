@@ -2,13 +2,11 @@ import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router";
 import PageHeading from "../../common/PageHeader/PageHeading";
 import Button from "../../common/Button/Button";
-import Tabs from "../../common/Tabs/Tabs";
 import LefthandImagery from "./components/LefthandImagery";
 import RighthandDetails from "./components/RighthandDetails";
 import { Table } from "../../common/Table/Table";
 import CustomerReviews from "./components/CustomerReviews";
 import Descriptions from "./components/Descriptions";
-import CustomerFeedback from "./components/CustomerFeedback";
 import PageMainContainer from "../../common/PageMain/PageMain";
 import { useDeleteProduct, useGetProduct } from "../../service/product/productHook";
 import { useGetOrders } from "../../service/order/orderHook";
@@ -128,14 +126,9 @@ function ViewProductMain ({ id, product = {}, isLoading, orderData = {}, orderLo
                 </GridItem>
             </Grid>
 
-            <Tabs
-                mt={10} 
-                headings={["Descriptions", "Customer Feedback",]}
-                panels={[
-                    <Descriptions data={product} />,
-                    <CustomerFeedback />,
-                ]}
-            />
+            <Box mt={5}>
+                <Descriptions data={product} />
+            </Box>
 
             <Table
                 mt={6}

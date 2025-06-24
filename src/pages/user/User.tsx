@@ -112,7 +112,7 @@ export default function User() {
     const [filter, setFilter] = useState<any>({})
 
     const { data: initData = {}, isLoading } = useGetUsers(filter)
-    const { data: userData = [] } = initData
+    const { data: userData = {} } = initData
     const users:any[] = userData?.data
 
     const addUser = () => { navigate(`/main/user-management/add`) }

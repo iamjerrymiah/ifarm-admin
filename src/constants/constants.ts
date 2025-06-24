@@ -4,9 +4,9 @@ export const storeToken = 'ifarm_token'
 
 export const statuses = {
     positive: ['active', 'good', 'done', 'accept', 'accepted', 'successful', 'completed', 'verified', 'yes', 'approved', 'passed', 'employed', 'paid', "delivered", true],
-    pending: ['pending', 'draft', 'processing', 'reviewing', 'pending_approval', "preparing"],
-    negative: ['unavailable', 'inactive', 'bad', 'reject', 'rejected', 'failed', 'no', 'denied', 'failed', 'declined', 'disapproved', 'cancelled', false],
-    other: ['available', 'unresolved', 'registered', 'blocked', 'dispatched'],
+    pending: ['pending', 'draft', 'processing', 'reviewing', 'pending_approval', "preparing", "low", 'medium'],
+    negative: ['unavailable', 'inactive', 'bad', 'reject', 'rejected', 'failed', 'no', 'denied', 'failed', 'declined', 'disapproved', 'cancelled', 'urgent', false],
+    other: ['available', 'unresolved', 'registered', 'blocked', 'dispatched', "open", "close", 'high'],
 }
 
 export const DEFAULT_SIZE_UNIT = 'px'

@@ -4,13 +4,33 @@ import { Input } from "../../../common/Form/Input";
 import { TextArea } from "../../../common/Form/TextArea";
 import { Select } from "../../../common/Form/Select";
 import Switch from "../../../common/Form/Switch";
+import { useGetUsers } from "../../../service/user/userHook";
+import { useMemo } from "react";
 
 export default function CreateTicketForm({
     edit,
     data = {},
     errors = {},
+    onChange,
     controller,
-}:{edit?:boolean; data?:any; errors?:any; controller?:any;}) {
+    attachments,
+    setAttachments
+}:{
+    edit?:boolean; 
+    data?:any; 
+    errors?:any; 
+    onChange?:any;
+    controller?:any;
+    attachments?: File[] | string[] | any;
+    setAttachments?: any;
+}) {
+
+    const { data: initData = {} } = useGetUsers({})
+    const { data: userData = {} } = initData
+    const users:any[] = userData?.data
+
+    const userNames = useMemo(() => users?.map((e:any) => e?.name), [users])
+    const userId = useMemo(() => users?.map((e:any) => e?.id), [users])
 
     return (
         <Box w='100%'>
@@ -18,8 +38,8 @@ export default function CreateTicketForm({
                 <Box>
                     <Input 
                         label="Customer Name"
-                        name=""
-                        value={data?.name}
+                        name="customer_name"
+                        value={data?.customer_name}
                         onChange={controller}
                         errors={errors}
                         required
@@ -27,19 +47,20 @@ export default function CreateTicketForm({
                     <Input 
                         label="Customer Email"
                         type="email"
-                        name=""
-                        value={data?.email}
+                        name="customer_email"
+                        value={data?.customer_email}
                         onChange={controller}
                         errors={errors}
                         required
                     />
                     <Input 
-                        label="Phone Number (Optional)"
-                        type="number"
-                        name=""
-                        value={data?.phone}
+                        label="Phone Number"
+                        // type="number"
+                        name="customer_phone"
+                        value={data?.customer_phone}
                         onChange={controller}
                         errors={errors}
+                        required
                     />
                 </Box>
             </FormSection>
@@ -47,17 +68,18 @@ export default function CreateTicketForm({
             <FormSection title="Ticket Details">
                 <Select 
                     label="Category"
-                    name=""
+                    name="category"
                     value={data?.category}
                     onChange={controller}
                     errors={errors}
-                    options={["Billing", "Technical Support", "Order Inquiry", "General"]}
+                    options={["billing", "TechnicalSupport", "orderInquiry", "general"]}
+                    displayValues={["Billing", "Technical Support", "Order Inquiry", "General"]}
                     required
                 />
                 <Select 
                     label="Priority Level"
-                    name=""
-                    value={data?.priorityLevel}
+                    name="priority"
+                    value={data?.priority}
                     onChange={controller}
                     errors={errors}
                     options={["Low", "Medium", "High", "Urgent"]}
@@ -65,15 +87,15 @@ export default function CreateTicketForm({
                 />
                 <Input 
                     label="Subject Line"
-                    name=""
-                    value={data?.subjectLine}
+                    name="subject"
+                    value={data?.subject}
                     onChange={controller}
                     errors={errors}
                     required
                 />
                 <TextArea 
                     label="Description"
-                    name=""
+                    name="description"
                     value={data?.description}
                     onChange={controller}
                     errors={errors}
@@ -81,41 +103,47 @@ export default function CreateTicketForm({
                 />
             </FormSection>
             
-            <FormSection title="Attachment (Optional)">
-                <></>
-            </FormSection>
-            
             <FormSection title="Assignment & Tracking">
                 <Select 
                     label="Assigned Support Agent"
-                    name=""
-                    value={data?.assignedAgent}
-                    onChange={controller}
+                    name="assigned_to"
+                    value={data?.assigned_to}
                     errors={errors}
-                    options={[]}
+                    options={userId}
+                    displayValues={userNames}
+                    onChange={e => {
+                        const { name, value, type } = e.target;
+                        const user = users?.find((x:any) => x.id == value);
+                        if(user)
+                        {
+                            onChange('assigned_to', user?.id);
+                        }
+                        onChange(name, value, type);
+                    }}
                     required
                 />
                 <Input 
-                    label="Expected Resolution Date (Optional)"
+                    label="Expected Resolution Date"
                     type="date"
-                    name=""
-                    value={data?.date}
+                    name="expected_resolution_date"
+                    value={data?.expected_resolution_date}
                     onChange={controller}
                     errors={errors}
+                    required
                 />
                 <Select 
                     label="Ticket Status"
-                    name=""
-                    value={data?.ticketStatus}
+                    name="status"
+                    value={data?.status}
                     onChange={controller}
                     errors={errors}
-                    options={[]}
+                    options={["open", "close"]}
                     required
                 />
                 <Input 
                     label="Internal Notes (Admin Only)"
-                    name=""
-                    value={data?.notes}
+                    name="admin_note"
+                    value={data?.admin_note}
                     onChange={controller}
                     errors={errors}
                 />
@@ -124,23 +152,23 @@ export default function CreateTicketForm({
             <FormSection title="Notifications & Follow-Up">
                 <Select 
                     label="Customer Notification Preference"
-                    name=""
-                    value={data?.notificationPreference}
+                    name="customer_notification_preference"
+                    value={data?.customer_notification_preference}
                     onChange={controller}
                     errors={errors}
-                    options={[]}
+                    options={["email", "sms"]}
                     required
                 />
                 <Switch 
                     label="Escalate urgent cases"
-                    name=""
-                    value={data?.urgentCase}
+                    name="escalate_urgent_cases"
+                    value={data?.escalate_urgent_cases}
                     onChange={controller}
                 />
                 <Switch 
                     label="Send Auto Response Email"
-                    name=""
-                    value={data?.sendEmail}
+                    name="send_auto_response_email"
+                    value={data?.send_auto_response_email}
                     onChange={controller}
                 />
             </FormSection>

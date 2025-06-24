@@ -110,7 +110,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                         >
                             <Flex align="center" gap={3}>
                                 <Image
-                                    src={isImageExisted && img?.id ? img?.image_url : getImageSrc(img)}
+                                    src={isImageExisted && img?.id ? img?.image_url || img?.attachment_url : getImageSrc(img)}
                                     alt=''
                                     boxSize="50px"
                                     objectFit="cover"
@@ -127,7 +127,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                                     size="sm"
                                     aria-label="Preview"
                                     icon={<FiEye />}
-                                    onClick={isImageExisted && img?.id  ? () => {handlePreview(img?.image_url)} : () => handlePreview(getImageSrc(img))}
+                                    onClick={isImageExisted && img?.id  ? () => {handlePreview(img?.image_url ?? img?.attachment_url)} : () => handlePreview(getImageSrc(img))}
                                 />
                                 <IconButton
                                     size="sm"

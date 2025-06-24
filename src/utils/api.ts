@@ -5,7 +5,6 @@ import openAxios from './axios-setup';
 
 export const SECHTTP = openAxios(API_URL);
 
-type ResourceType = 'SECURITY'; // add to this
 const getHttpResource = () => {
     let HTTP:
         | AxiosInstance
@@ -16,13 +15,6 @@ const getHttpResource = () => {
         headers?: { 'Content-Type': string } | undefined;
     }) => Promise<any>);
 
-    // switch (resourceType) {
-    //     case 'SECURITY':
-    //         HTTP = SECHTTP;
-    //         break;
-    //     default:
-    //         HTTP = SECHTTP;
-    // }
     HTTP = SECHTTP
     return HTTP;
 }

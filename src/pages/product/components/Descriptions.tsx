@@ -16,8 +16,8 @@ export default function Descriptions({data = {}}:any) {
 
     return (
             <Grid
-                gap={[3]} 
-                templateColumns={{ base: "1fr", sm: "1fr", md: "1fr", lg: "1fr 2fr" }} 
+                gap={[5]} 
+                templateColumns={{ base: "1fr", sm: "1fr", md: "1fr", lg: "1fr" }} 
             >
                 <GridItem>
                     <Stack spacing={2}>

@@ -102,7 +102,7 @@ const routeConfig = [
         auth: true,
         layout: AuthLayout,
     },
-        {
+    {
         path: "/main/customer-support/ticket/create",
         component: CreateTicket,
         auth: true,

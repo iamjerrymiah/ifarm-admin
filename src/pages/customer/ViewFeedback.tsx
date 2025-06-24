@@ -1,24 +1,46 @@
-import { Box, HStack, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react";
+import { Box, HStack, Stack, Tag, Text } from "@chakra-ui/react";
 import PageMainContainer from "../../common/PageMain/PageMain";
 import PageHeading from "../../common/PageHeader/PageHeading";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Button from "../../common/Button/Button";
 import { WithAvatar } from "../product/components/CustomerFeedback";
 import Rating from "../../common/Form/Rating";
-import { FaPaperclip } from "react-icons/fa";
-import { useState } from "react";
-import { TextArea } from "../../common/Form/TextArea";
-import { Select } from "../../common/Form/Select";
+import { useGetFeedback, useHideFeedback } from "../../service/user/feedbackHook";
+import { allLower, capCase, prettyDateFormat } from "../../utils/utils";
+import StatusChanger from "../../common/Table/StatusChanger";
+import Notify from "../../utils/notify";
+import { useConfirmAction } from "../../hooks/useActions";
+import ConfirmModal from "../../common/Modal/ConfirmModal";
 
 export default function ViewFeedback() {
 
     const navigate = useNavigate()
-    const [data, setData] = useState<any>({})
+    const { id } = useParams<{ id: string; }>();
+    const { isOpenConfirm, openConfirm, closeConfirm, current } = useConfirmAction()
+
+    const { data: feedbackData = {}, isLoading } = useGetFeedback(id)
+    const { data: feedback = {} } = feedbackData;
+
+    const shouldHide = (data:any) => { openConfirm(data) }
+
+    const { mutateAsync: hideAction } = useHideFeedback()
+    const hideProduct = async () => {
+        try {
+            const res:any = await hideAction({id: current?.id})
+            Notify.success("Success")
+            return res
+        } catch(e:any) { Notify.error(e?.message ?? "Failed"); return e; }
+    }
+   
 
     return (
         <PageMainContainer title="Customer Support & Feedback" description="Customer Support & Feedback">
             <Box w='100%' pb={10}>
-                <PageHeading title='Customer Feedback View' subHeading="Feedback Detail – FB-2024-0847">
+                <PageHeading 
+                    isLoading={isLoading}
+                    title='Customer Feedback View' 
+                    subHeading={`Feedback Detail – ${feedback?.feedback_identifier ?? "N/A"}`}
+                >
                     <HStack>
                         <Button 
                             text='Back'
@@ -26,15 +48,15 @@ export default function ViewFeedback() {
                             iconType="back"
                             onClick={()=>navigate(-1)}
                         />
-                        <Button 
-                            text='Cancel'
-                            variant='outline'
-                            color={'#0E2354'}
-                        />
-                        <Button 
-                            text='Flag For Review'
-                            // onClick={}
-                        />
+                        {!feedback?.is_hidden &&
+                            <Button 
+                                text='Hide Feedback'
+                                variant='outline'
+                                color={'#EEC401'}
+                                border={'1px solid #EEC401'}
+                                onClick={() => shouldHide(feedback)}
+                            />
+                        }
                     </HStack>
                 </PageHeading>
 
@@ -48,13 +70,17 @@ export default function ViewFeedback() {
                 >
                     <Text fontSize={'16px'} fontWeight={500} color={'#101828'} mb={2}>Feedback Summary</Text>
                     <Stack>
-                        <HStack justify={'space-between'}><p>Feedback ID</p> <b>FB-2024-0847</b></HStack>
-                        <HStack justify={'space-between'}><p>Submission Date</p> <b>May 28, 2024 at 03:30 PM</b></HStack>
-                        <HStack justify={'space-between'}><p>Order Reference</p> <Tag bgColor={'#EEC4011A'} color={'#EEC401'}>ORD-2024-3421</Tag></HStack>
-                        <HStack justify={'space-between'}><p>Feedback Type</p> <Tag fontSize={'11px'} bgColor={'#027A481A'} color={'#027A48'}>Product Review</Tag></HStack>
-                        <WithAvatar datum={'Olivia Rhye'} sub="olivia@gmail.com" align="center"/>
-                        <HStack align={'center'} mt={2}><p>Rating:</p> <Rating rating={5}/></HStack>
-                        <HStack justify={'space-between'}><p>Status</p> <Tag fontSize={'11px'} bgColor={'#5925DC1A'} color={'#5925DC'}>Pending</Tag></HStack>
+                        <HStack justify={'space-between'}><p>Feedback ID</p> <b>{feedback?.feedback_identifier ?? ""}</b></HStack>
+                        <HStack justify={'space-between'}><p>Submission Date</p> <b>{prettyDateFormat(feedback?.created_at) ?? ""}</b></HStack>
+                        <HStack justify={'space-between'}><p>Order Reference</p> <Tag bgColor={'#EEC4011A'} color={'#EEC401'}>{feedback?.order?.number ?? ""}</Tag></HStack>
+                        <HStack justify={'space-between'}><p>Feedback Type</p> <Tag fontSize={'11px'} bgColor={'#027A481A'} color={'#027A48'}>{capCase(feedback?.feedback_type) ?? ""}</Tag></HStack>
+                        <WithAvatar 
+                            datum={capCase(feedback?.customer_name) ?? ""} 
+                            sub={allLower(feedback?.customer_email) ?? ""}
+                            align="center"
+                        />
+                        <HStack align={'center'} mt={2}><p>Rating:</p> <Rating rating={Number(feedback?.rating ?? 0)}/></HStack>
+                        <HStack justify={'space-between'}><p>Status</p> <StatusChanger datum={feedback?.status ?? ""}/></HStack>
                     </Stack>
                 </Box>
 
@@ -73,28 +99,30 @@ export default function ViewFeedback() {
                             <b>Customer Feedback</b>
                             {/* <p>28 May, 2025 - 2:30PM</p> */}
                         </HStack>
-                        <Text fontSize={'12px'}>
-                            I recently purchased the wireless headphones and overall I'm quite satisfied with the quality. 
-                            The sound is crisp and the battery life is excellent. However, I did notice that the padding on the ear cups could be more comfortable for extended use. 
-                            The packaging was also damaged upon arrival, though the product itself was fine. Would appreciate if this could be addressed for future orders.
-                        </Text>
+                        <Text fontSize={'12px'}>{feedback?.comment ?? ""}</Text>
                     </Box>
 
-                    <Box my={4}>
+                    {/* <Box my={4}>
                         <b>Attachments</b>
                         <SimpleGrid spacing={4} columns={[2,3,3,6]}>
                             <Button leftIcon={<FaPaperclip />} size="sm" colorScheme="blue" variant="ghost">screenshot_error.png</Button>
                             <Button leftIcon={<FaPaperclip />} size="sm" colorScheme="blue" variant="ghost">Package_damage.jpg</Button>
                         </SimpleGrid>
-                    </Box>
+                    </Box> */}
 
-                    <Box p={2} pb={3} fontSize={'13px'} color={'#475467'} bgColor={'#EEC4011A'} boxShadow={'md'}>
+                    {/* <Box p={2} pb={3} fontSize={'13px'} color={'#475467'} bgColor={'#EEC4011A'} boxShadow={'md'}>
                         <b>Admin Notes</b>
                         <Text fontSize={'12px'}>Customer reported packaging damage. Product quality rated highly. Consider reviewing packaging standards.</Text>
-                    </Box>
+                    </Box> */}
                 </Box>
 
-                <Box
+                <ConfirmModal 
+                    isOpen={isOpenConfirm}
+                    onClose={closeConfirm}
+                    onConfirm={hideProduct}
+                />
+
+                {/* <Box
                     p={4} 
                     mt={8}
                     h={'240px'}
@@ -122,9 +150,9 @@ export default function ViewFeedback() {
                         </Box>
                     </Box>
 
-                </Box>
+                </Box> */}
 
-                <Box p={4} mt={8} borderRadius={'15px'} border={'1px solid #D0D5DD'}>
+                {/* <Box p={4} mt={8} borderRadius={'15px'} border={'1px solid #D0D5DD'}>
                     <Text fontSize={'16px'} fontWeight={500} color={'#101828'} mb={[3,6]}>Admin Actions</Text>
                     <SimpleGrid columns={[1,2]} spacing='8'>
                         <TextArea 
@@ -147,7 +175,7 @@ export default function ViewFeedback() {
                         />
 
                     </SimpleGrid>
-                </Box>
+                </Box> */}
 
             </Box>
         </PageMainContainer>

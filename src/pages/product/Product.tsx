@@ -147,8 +147,6 @@ export default function Product() {
     const { data: productData = {} } = initData
     const products:any[] = productData?.data
 
-    console.log(products)
-
     const { data: categoryData = {}, isLoading: catLoad } = useGetCategories({})
     const { data: categories = [] } = categoryData;
 

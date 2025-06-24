@@ -65,98 +65,100 @@ function LoginMain () {
     }
 
     return (
-        <Flex h="100vh" direction={{ base: 'column', md: 'row' }}>
+        <PageMainContainer title='Login' description='Login'>
+            <Flex h="100vh" direction={{ base: 'column', md: 'row' }}>
 
-            <Flex
-                flex="1"
-                p={{ base: 6, md: 12 }}
-                direction="column"
-                justify="center"
-                align="center"
-                bg="white"
-            >
-                <Box position={'absolute'} left={5} top={5} >
-                    <Image 
-                        src={logo} 
-                        alt="" 
-                        mb={6} 
-                    />
-                </Box>
+                <Flex
+                    flex="1"
+                    p={{ base: 6, md: 12 }}
+                    direction="column"
+                    justify="center"
+                    align="center"
+                    bg="white"
+                >
+                    <Box position={'absolute'} left={5} top={5} >
+                        <Image 
+                            src={logo} 
+                            alt="" 
+                            mb={6} 
+                        />
+                    </Box>
 
-                <Flex maxW={["sm", 'md', "md", "sm"]} w="full" direction={'column'}>
-                    <Form onSubmit={() => handleSubmit(data)}>
-                        <Heading 
-                            mb={2} 
-                            color={TextColor.heading} 
-                            fontWeight={600} 
-                            fontSize={'32px'}
-                        >
-                            Log in
-                        </Heading>
-                        <Text 
-                            mb={10} 
-                            fontSize={'16px'}
-                            color={TextColor.text}
-                        >
-                            Welcome back! Please enter your details. 
-                        </Text>
+                    <Flex maxW={["sm", 'md', "md", "sm"]} w="full" direction={'column'}>
+                        <Form onSubmit={() => handleSubmit(data)}>
+                            <Heading 
+                                mb={2} 
+                                color={TextColor.heading} 
+                                fontWeight={600} 
+                                fontSize={'32px'}
+                            >
+                                Log in
+                            </Heading>
+                            <Text 
+                                mb={10} 
+                                fontSize={'16px'}
+                                color={TextColor.text}
+                            >
+                                Welcome back! Please enter your details. 
+                            </Text>
 
-                        <Stack spacing={4}>
-                            <Input 
-                                upperLabel='Email'
-                                name='email'
-                                type='email'
-                                value={data?.email}
-                                errors={errors}
-                                onChange={controller}
-                                required
-                                placeholder="Enter your email" 
-                            />
-                            <Input 
-                                upperLabel='Password'
-                                name='password'
-                                type='password'
-                                value={data?.password}
-                                errors={errors}
-                                onChange={controller}
-                                required
-                            />
+                            <Stack spacing={4}>
+                                <Input 
+                                    upperLabel='Email'
+                                    name='email'
+                                    type='email'
+                                    value={data?.email}
+                                    errors={errors}
+                                    onChange={controller}
+                                    required
+                                    placeholder="Enter your email" 
+                                />
+                                <Input 
+                                    upperLabel='Password'
+                                    name='password'
+                                    type='password'
+                                    value={data?.password}
+                                    errors={errors}
+                                    onChange={controller}
+                                    required
+                                />
 
-                            {/* <Checkbox colorScheme="green">
-                                <Text fontSize={'12px'} color={TextColor.text}>Remember for 30 days</Text>
-                            </Checkbox> */}
+                                {/* <Checkbox colorScheme="green">
+                                    <Text fontSize={'12px'} color={TextColor.text}>Remember for 30 days</Text>
+                                </Checkbox> */}
 
-                            <Button 
-                                mt={6}
-                                type='submit'
-                                text='Sign in'
-                                size={'md'}
-                                isLoading={isPending}
-                                disabled={isPending || isObjectPropsEmpty(data)}
-                            />
-                        </Stack>
-                    </Form>
+                                <Button 
+                                    mt={6}
+                                    type='submit'
+                                    text='Sign in'
+                                    size={'md'}
+                                    isLoading={isPending}
+                                    disabled={isPending || isObjectPropsEmpty(data)}
+                                />
+                            </Stack>
+                        </Form>
+                    </Flex>
+
+                    <Box position={'absolute'} bottom={5} left={5}>
+                        <Text mt="auto" fontSize="14px" color="#475467" pt={6}> © inimitable 2025</Text>
+                    </Box>
                 </Flex>
 
-                <Box position={'absolute'} bottom={5} left={5}>
-                    <Text mt="auto" fontSize="14px" color="#475467" pt={6}> © inimitable 2025</Text>
-                </Box>
+
+                {showImage && (
+                    <Box flex="1" position="relative" overflow="hidden">
+                        <Image
+                            src={loginImg}
+                            alt=""
+                            objectFit="cover"
+                            w="100%"
+                            h="100%"
+                        />
+                    </Box>
+                )}
+
             </Flex>
-
-
-            {showImage && (
-                <Box flex="1" position="relative" overflow="hidden">
-                    <Image
-                        src={loginImg}
-                        alt=""
-                        objectFit="cover"
-                        w="100%"
-                        h="100%"
-                    />
-                </Box>
-            )}
-
-        </Flex>
+        </PageMainContainer>
     )
 }
 

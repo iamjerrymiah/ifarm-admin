@@ -48,8 +48,8 @@ export default function ProductForm({
     const { data: categoryData = {} } = useGetCategories({})
     const { data: categories = [] } = categoryData;
 
-    const catNames = useMemo(() => categories?.map((e:any) => e.name), [categories])
-    const catId = useMemo(() => categories.map((e:any) => e.id), [categories])
+    const catNames = useMemo(() => categories?.map((e:any) => e?.name), [categories])
+    const catId = useMemo(() => categories?.map((e:any) => e?.id), [categories])
 
     const numberHundredArray = Array(100).fill(1).map((n, i) => n + i)
 
