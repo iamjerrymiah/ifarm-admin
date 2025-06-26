@@ -39,7 +39,7 @@ const DateRangeInput = ({ today, range, setRange, onFilter, formatDate }: Props)
                         onChange={handleChange}
                         max={formatDate(today)}
                         placeholder="Start"
-                        fontSize="sm"
+                        fontSize={['11px',"sm"]}
                         border="none"
                         _focus={{ boxShadow: "none" }}
                     />
@@ -53,7 +53,7 @@ const DateRangeInput = ({ today, range, setRange, onFilter, formatDate }: Props)
                         onChange={handleChange}
                         max={formatDate(today)}
                         placeholder="End"
-                        fontSize="sm"
+                        fontSize={['11px',"sm"]}
                         border="none"
                         _focus={{ boxShadow: "none" }}
                     />
